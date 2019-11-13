@@ -61,35 +61,20 @@ int CArray::removeDuplicates(vector<int>& nums)
 			链接：https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii
 			著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 
-* 函数算法： 比较两天的价格，如果第二天比今天价格高，今天买入，如果第二天比今天价格低且之前已买入股票，今天卖出
-* 注意： 1、由于价格可能为0，所以标记已经买入股票不能用持有股票价值计算，改用了一个flag标记；
-		 2、如果最后一天的价格高，则已最后一天价格卖出
+* 函数算法：贪心算法，在这里，对于“今天的股价 - 昨天的股价”，得到的结果有 3 种可能：（1）正数（2）0（3）负数，我们只加正数。
 * 算法分析：时间复杂度：O(n)  8ms， 80.18%
 			
 * 
 **/
 int CArray::maxProfit(vector<int>& prices) {
-	int in = 0, flag = 0, profit = 0;
+	int profit = 0;
 	if (prices.empty())
 		return 0;
-	for (int i = 0; i < prices.size() - 1; ++i)
+	for (int i = 1; i < prices.size(); ++i)
 	{
-		if (!flag && prices[i] < prices[i + 1])  // !in表示此时没有买入，下一个数变大
+		if (prices[i] - prices[i - 1] > 0)  // 如果是大于0的
 		{
-			in = prices[i];  // 此时买入
-			flag = 1;
-		}
-		if (flag && prices[i] > prices[i + 1])  // 此时买入了，且下一个数变小
-		{
-			flag = 0; // 此时卖出
-			profit = prices[i] - in + profit;  // 计算此时利润
-			in = 0;  // 清空仓库
-		}
-		if (flag && i == prices.size() - 2)  // 此时到了数组最后但是还没有卖出
-		{
-			flag = 0; // 以最后一天的价格卖出
-			profit = prices[i + 1] - in + profit;  // 计算此时利润
-			in = 0;  // 清空仓库
+			profit = prices[i] - prices[i - 1] + profit;  // 两天相邻的比较，大于就累计利润
 		}
 	}
 	return profit;
