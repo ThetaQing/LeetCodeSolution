@@ -80,3 +80,35 @@ int CArray::maxProfit(vector<int>& prices) {
 	return profit;
 
 }
+/*************函数说明*********
+* 函数名：rotate(vector<int>& nums, int k)
+* 函数参数： 一个数组,翻转步数
+* 函数返回值：无，地址返回翻转后的数组
+* 问题描述：给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
+			题目来源：https://leetcode-cn.com/problems/rotate-array/
+
+* 函数算法：额外使用空间暂存需要翻转到头部的元素，再从数组尾部向头部依次覆盖新元素
+* 算法分析：时间复杂度：O(n)  20ms  92.11%
+			空间复杂度：O(k%n)  k为翻转的步数，n为元素个数
+
+* 注意：1、由于翻转次数可能大于数组元素个数，所以取余数
+		2、在顺序部分覆盖结束后，将暂存数组的元素提取出来进行覆盖
+**/
+void CArray::rotate(vector<int>& nums, int k) {
+	vector<int> temp;
+	int len = nums.size();
+	if (len <= 1)
+		return;
+	for (int i = len - 1; i >= len - k % len; --i)
+	{
+		temp.push_back(nums[i]);  // 暂存
+	}
+	for (int i = len - 1; i >= 0; --i)
+	{
+		if (i >= k%len)
+			nums[i] = nums[i - k%len];
+		else
+			nums[i] = temp[k%len-i-1];
+	}
+
+}
