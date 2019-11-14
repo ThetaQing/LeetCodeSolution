@@ -106,9 +106,9 @@ void CArray::rotate(vector<int>& nums, int k) {
 	for (int i = len - 1; i >= 0; --i)
 	{
 		if (i >= k%len)
-			nums[i] = nums[i - k%len];
+			nums[i] = nums[i - k%len];  // 前len-k个元素向前移动k个位置
 		else
-			nums[i] = temp[k%len-i-1];
+			nums[i] = temp[k%len-i-1];  // 暂存的元素放入原数组中
 	}
 
 }
