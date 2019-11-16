@@ -1,5 +1,7 @@
 ﻿#include "basic_algorithm_array.h"
 #include <iostream>
+#include <algorithm>
+#include <stack>
 #include <vector>;
 using namespace std;
 using std::vector;
@@ -111,4 +113,59 @@ void CArray::rotate(vector<int>& nums, int k) {
 			nums[i] = temp[k%len-i-1];  // 暂存的元素放入原数组中
 	}
 
+}
+/****************函数说明*****************
+* 函数名：containsDuplicate(vector<int>& nums) 
+* 函数参数：vector数组
+* 函数返回值：布尔值，当输入数组中有重复元素时返回true，否则返回false
+* 题目描述：217. 给定一个整数数组，判断是否存在重复元素。
+
+如果任何值在数组中出现至少两次，函数返回 true。如果数组中每个元素都不相同，则返回 false。
+* 实现思路：先排序，再比较两个相邻的数
+* 时间复杂度：决定于排序算法的时间复杂度
+* 其他说明：还可以用哈希表
+
+**/
+bool CArray::containsDuplicate(vector<int>& nums) {
+	if (nums.size() <= 1)
+		return false;
+	sort(nums.begin(), nums.end());  // 排序
+
+	int i = 1;  // 索引
+	while (i < nums.size())
+	{
+		if (!(nums[i] - nums[i - 1]))  // 如果等于0，返回true
+			return true;
+		else
+			i += 1;
+	}
+	return false;
+
+
+}
+/****************函数说明*****************
+* 函数名：int singleNumber(vector<int>& nums)
+* 函数参数：vector数组
+* 函数返回值：返回那个只出现一次的元素
+* 题目描述：136. 给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+
+说明：
+
+你的算法应该具有线性时间复杂度。 你可以不使用额外空间来实现吗？
+* 实现思路：异或运算
+* 时间复杂度：O(n)
+* 其他说明：还可以用哈希表
+
+**/
+int CArray::singleNumber(vector<int>& nums) {
+	if (nums.size() < 1)
+		throw "list index out of range";
+	
+	// 异或运算
+	int num = 0;
+	for (int i = 0; i < nums.size(); ++i)
+	{
+		num = num ^ nums[i];
+	}
+	return num;
 }

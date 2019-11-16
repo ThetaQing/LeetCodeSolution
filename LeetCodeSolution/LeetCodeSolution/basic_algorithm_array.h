@@ -7,6 +7,8 @@ public:
 	int removeDuplicates(std::vector<int>& nums);
 	int maxProfit(std::vector<int>& prices);
 	void rotate(std::vector<int>& nums, int k);
+	bool containsDuplicate(std::vector<int>& nums);
+	int singleNumber(std::vector<int>& nums);
 };
 
 #endif // !__BASIC_ALGORITHM_ARRAY_H__
