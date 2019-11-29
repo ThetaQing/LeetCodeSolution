@@ -2,7 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <stack>
-#include <vector>;
+#include <vector>
 using namespace std;
 using std::vector;
 /*************文件说明***********
@@ -168,4 +168,175 @@ int CArray::singleNumber(vector<int>& nums) {
 		num = num ^ nums[i];
 	}
 	return num;
+}
+
+/*******************函数说明*********************
+* 函数名：vector<int> intersect(vector<int>& nums1, vector<int>& nums2)
+* 函数参数：两个整型数组
+* 函数返回值：这两个数组的交集
+* 求解思路：
+		1、排序；
+		2、定义两个指针，如果不相等，将小数组的指针向前移动，如果相等，push这个元素，两个指针同时移动；
+		3、返回结果数组。
+* 题目描述：
+	350. 给定两个数组，编写一个函数来计算它们的交集。
+* 提交结果：
+	68.80%，12ms，9MB
+**/
+
+vector<int> CArray:: intersect(vector<int>& nums1, vector<int>& nums2)
+{
+	vector<int> result;  // 结果数组
+	if (nums1.size() == 0 || nums2.size() == 0)
+		return result;
+	sort(nums1.begin(), nums1.end());
+	sort(nums2.begin(), nums2.end());
+	for (int i = 0, j = 0; i < nums1.size() && j < nums2.size();)
+	{
+		if (nums1[i] < nums2[j])  // 第一个数组i位置的数小于第二个数组j位置的数
+			++i;  // 向前移动第一个数组指针
+		else if (nums1[i] > nums2[j])
+			++j;  // 否则的话移动第二个数组指针
+		else
+		{
+			result.push_back(nums1[i]);  // 如果两者相等，push该元素
+			++i;
+			++j;  // 移动指针
+		}
+
+	}
+	return result;
+}
+/*****************函数说明*************
+* 函数名：vector<int> intersectRefer(vector<int>& nums1, vector<int>& nums2)
+* 函数说明：和上面intersect函数是同一题，参考的网上题解，这是我原本的思路，只是没想到这样做的时间竟然比第一种解法更快，find函数是循环查找所有元素直到找到
+* 实现方法：遍历第一个数组，对第一个数组中的每个元素在第二个数组中查找，如果找到push到结果数组中。
+**/
+vector<int> CArray:: intersectRefer(vector<int>& nums1, vector<int>& nums2)
+{
+	vector<int> res;
+	vector<int>::iterator it;
+	for (int i = 0; i < nums1.size(); i++)
+	{
+		it = find(nums2.begin(), nums2.end(), nums1[i]);
+		if (it != nums2.end())//查找到元素
+		{
+			res.push_back(*it);
+			nums2.erase(it);//删除元素
+		}
+	}
+	return res;
+}
+/******************函数说明**********************
+* 函数名：vector<int> plusOne(vector<int>& digits)
+* 函数参数：由整数组成的数组，每个元素只存储单个数字
+* 函数返回值：数组表示的整数+1后的数用数组表示
+* 问题描述：
+	给定一个由整数组成的非空数组所表示的非负整数，在该数的基础上加一。
+
+	最高位数字存放在数组的首位， 数组中每个元素只存储单个数字。
+
+	你可以假设除了整数 0 之外，这个整数不会以零开头。
+* 测试信息：
+执行用时 :12 ms, 在所有 cpp 提交中击败了6.92%的用户
+内存消耗 :8.6 MB, 在所有 cpp 提交中击败了10.91%的用户
+
+**/
+
+vector<int> CArray::plusOne(vector<int>& digits) {
+	vector<int> result;
+	int flag = 0;
+	if (digits.size() == 0)
+	{
+		result.push_back(1);
+		return result;
+	}
+	reverse(digits.begin(), digits.end());  // 反转
+	if (digits[0] == 9)  // 如果个位数=9，进位标志置1.个位变为0
+	{
+		result.push_back(0);
+		flag = 1;
+	}
+	else  // 否则直接最后一位+1
+	{
+		result.push_back(digits[0] + 1);
+		for (int i = 1; i < digits.size(); ++i)
+			result.push_back(digits[i]);
+
+		reverse(result.begin(), result.end());
+		return result;
+	}
+	// 如果个位是9
+	for (int i = 1; i < digits.size(); ++i)
+	{		
+		if (digits[i] == 9 && flag)  // 如果有进位并且该位为9
+		{
+			result.push_back(0);
+			flag = 1;
+		}
+		else if(flag)  // 进位到此为止
+		{
+			result.push_back(digits[i] + 1);
+			for (int j = i+1; j < digits.size(); ++j)
+				result.push_back(digits[j]);  // 将其他部分复制过来
+			reverse(result.begin(), result.end());
+			return result;
+			
+		}
+		
+
+			
+	}
+	if (flag)  // 循环到最后还有进位标志，说明全部都是9，有位数进位
+	{		
+		result.push_back(1);
+	}
+	reverse(result.begin(), result.end());
+	return result;
+
+
+
+}
+/***************函数说明*************
+* 测试结果：
+	执行用时 :4 ms, 在所有 cpp 提交中击败了86.44%的用户
+	内存消耗 :8.4 MB, 在所有 cpp 提交中击败了75.63%的用户
+
+**/
+vector<int> CArray::plusOne2(vector<int>& digits) {
+	vector<int> result = digits;
+
+	if (digits.size() == 0)
+	{
+		result.push_back(1);
+		return result;
+	}
+	
+	if (digits[digits.size() - 1] != 9)
+	{
+		result[result.size() - 1] = digits[digits.size() - 1] + 1;
+		return result;
+	}
+	else
+	{
+		result[result.size() - 1] = 0;
+		for (int i = digits.size() - 2; i >= 0; --i)
+		{
+			if (digits[i] == 9)
+			{
+				result[i] = 0;
+			}
+			else 
+			{
+				result[i] = digits[i] + 1;
+				break;  // 该位不为9，不会再产生进位了，退出循环
+			}
+
+		}
+		if (result[0] == 0)  // 如果首位为0，表示还有进位未处理
+			result.insert(result.begin(), 1);
+	}
+	
+	return result;
+
 }

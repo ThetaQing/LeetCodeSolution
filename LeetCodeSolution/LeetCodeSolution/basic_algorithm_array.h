@@ -9,6 +9,10 @@ public:
 	void rotate(std::vector<int>& nums, int k);
 	bool containsDuplicate(std::vector<int>& nums);
 	int singleNumber(std::vector<int>& nums);
+	std::vector<int> intersect(std::vector<int>& nums1, std::vector<int>& nums2);
+	std::vector<int> intersectRefer(std::vector<int>& nums1, std::vector<int>& nums2);
+	std::vector<int> plusOne(std::vector<int>& digits);
+	std::vector<int> plusOne2(std::vector<int>& digits);
 };
 
 #endif // !__BASIC_ALGORITHM_ARRAY_H__
