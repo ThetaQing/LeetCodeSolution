@@ -416,6 +416,60 @@ void CArray::moveZeroes(vector<int>& nums) {
 
 		}
 	}
-	
 
+}
+
+/***********************函数说明***************
+* 函数名：vector<int> twoSum(vector<int>& nums, int target)
+* 函数参数：待查找数组、目标值
+* 函数返回值：该数组中那两个和为目标值的整数的索引
+* 问题描述：
+	给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
+
+	你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。
+* 解决思路：
+		1、复制该数组记做temp并排序；
+		2、双指针i，j，i从小的部分开始一段，j从大的部分开始移动；
+		3、当temp[i]+temp[j] < target时，移动小指针，使和增大，否则移动大指针，使和减小
+		4、查找两个元素在原数组中的位置并返回。
+* 测试结果：
+	执行用时 :8 ms, 在所有 cpp 提交中击败了97.91%的用户
+	内存消耗 :9.2 MB, 在所有 cpp 提交中击败了84.05%的用户
+
+        
+**/
+
+vector<int> CArray:: twoSum(vector<int>& nums, int target)
+{
+	vector<int> temp = nums;
+	sort(temp.begin(), temp.end());
+	int i, j;
+	for (i = 0, j = temp.size() - 1; j > i;)
+	{
+		if (temp[i] + temp[j] > target)
+			--j;
+		else if (temp[i] + temp[j] < target)
+			++i;
+		else
+			break;
+	}
+	auto item1 = find(nums.begin(), nums.end(), temp[i]);  // 在原数组中找到这个元素
+	auto index1 = std::distance(std::begin(nums), item1);  // 计算这个元素在原数组中的位置
+	int temp_num = nums[index1];  // 暂存这个数据
+	nums[index1] = INT_MAX;// 将该位置的数据置为一个不可能影响查找temp[j]的数，即，大于target的数INT_MAX一定不会被出现在结果中
+	auto item2 = find(nums.begin(), nums.end(), temp[j]);	// 找第二个元素
+	auto index2 = std::distance(std::begin(nums), item2);  // 找第二个元素的下标
+	nums[index1] = temp_num;  // 还原该数组的nums[index1]的值
+	temp.clear();
+	if (index1 < index2)  
+	{
+		temp.push_back(index1);
+		temp.push_back(index2);
+	}
+	else
+	{
+		temp.push_back(index2);
+		temp.push_back(index1);
+	}
+	return temp;
 }

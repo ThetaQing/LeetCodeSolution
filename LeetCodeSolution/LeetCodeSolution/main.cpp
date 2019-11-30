@@ -16,10 +16,10 @@ int int2bit(int n)
 int main()
 {
 	CArray myClass;
-	vector<int> num1{ 9,9,9 };
+	vector<int> num1{ 2,7,11,15 };
 	vector<int>num2{ 2, 2, 3, 4, 1 };
 	vector<int> result;
-	result = myClass.plusOne2(num1);
+	result = myClass.twoSum(num1, 9);
 	for (auto i : result)
 		cout << i << "\t";
 	cout << endl;

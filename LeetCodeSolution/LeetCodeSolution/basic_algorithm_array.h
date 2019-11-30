@@ -15,6 +15,7 @@ public:
 	std::vector<int> plusOne2(std::vector<int>& digits);
 	std::vector<int> plusOneRefer(std::vector<int>& digits);
 	void moveZeroes(std::vector<int>& nums);
+	std::vector<int> twoSum(std::vector<int>& nums, int target);
 };
 
 #endif // !__BASIC_ALGORITHM_ARRAY_H__
