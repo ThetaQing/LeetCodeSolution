@@ -237,15 +237,21 @@ vector<int> CArray:: intersectRefer(vector<int>& nums1, vector<int>& nums2)
 	最高位数字存放在数组的首位， 数组中每个元素只存储单个数字。
 
 	你可以假设除了整数 0 之外，这个整数不会以零开头。
+* 实现过程：（这种实现方法是调用默认构造函数，下一种实现方法是调用的复制构造函数）
+		1、结果数组为空，将输入数组翻转；
+		2、判断个位是否为9，为9，result数组push 0，进入第三步，否则进入第四步；
+		3、从下一位开始遍历数组，如果第i位为9，该位置0，否则进入第四步；
+		4、将原数组其他元素复制到result中，翻转result并返回；
+		5、如果数组仍然没有返回，说明此时最高位为0，push 1，翻转数组并返回。
 * 测试信息：
-执行用时 :12 ms, 在所有 cpp 提交中击败了6.92%的用户
+执行用时 :4 ms, 在所有 cpp 提交中击败了86.44%的用户
 内存消耗 :8.6 MB, 在所有 cpp 提交中击败了10.91%的用户
 
 **/
 
 vector<int> CArray::plusOne(vector<int>& digits) {
 	vector<int> result;
-	int flag = 0;
+
 	if (digits.size() == 0)
 	{
 		result.push_back(1);
@@ -255,7 +261,7 @@ vector<int> CArray::plusOne(vector<int>& digits) {
 	if (digits[0] == 9)  // 如果个位数=9，进位标志置1.个位变为0
 	{
 		result.push_back(0);
-		flag = 1;
+		
 	}
 	else  // 否则直接最后一位+1
 	{
@@ -269,12 +275,12 @@ vector<int> CArray::plusOne(vector<int>& digits) {
 	// 如果个位是9
 	for (int i = 1; i < digits.size(); ++i)
 	{		
-		if (digits[i] == 9 && flag)  // 如果有进位并且该位为9
+		if (digits[i] == 9)  // 如果有进位并且该位为9
 		{
 			result.push_back(0);
-			flag = 1;
+			
 		}
-		else if(flag)  // 进位到此为止
+		else   // 进位到此为止
 		{
 			result.push_back(digits[i] + 1);
 			for (int j = i+1; j < digits.size(); ++j)
@@ -287,10 +293,9 @@ vector<int> CArray::plusOne(vector<int>& digits) {
 
 			
 	}
-	if (flag)  // 循环到最后还有进位标志，说明全部都是9，有位数进位
-	{		
-		result.push_back(1);
-	}
+	
+	result.push_back(1);
+
 	reverse(result.begin(), result.end());
 	return result;
 
@@ -298,35 +303,44 @@ vector<int> CArray::plusOne(vector<int>& digits) {
 
 }
 /***************函数说明*************
+* 函数名:plusOne2(vector<int>& digits)
+* 函数说明：和上一个同一题，不同解法
+			该解法更简单明了：
+				1、复制该数组
+				2、判断最后一位，如果不是9，最后一位+1，否则进入第三步；
+				3、将该位置为0，开始向前遍历数组其他部分；
+				4、若i位不为9，i位数+1后退出循环，否则将i位置0，++i；
+				5、回到第4步，直到退出循环；
+				6、判断结果数组的第0位，若为0，表示尚有进位，在数组头节点处插入1，返回数组。
 * 测试结果：
 	执行用时 :4 ms, 在所有 cpp 提交中击败了86.44%的用户
 	内存消耗 :8.4 MB, 在所有 cpp 提交中击败了75.63%的用户
 
 **/
 vector<int> CArray::plusOne2(vector<int>& digits) {
-	vector<int> result = digits;
+	vector<int> result = digits;  // 复制输入的数组
 
-	if (digits.size() == 0)
+	if (digits.size() == 0) 
 	{
 		result.push_back(1);
 		return result;
 	}
 	
-	if (digits[digits.size() - 1] != 9)
+	if (digits[digits.size() - 1] != 9) // 先判断最后一个数，如果不是9，个位+1，直接返回
 	{
 		result[result.size() - 1] = digits[digits.size() - 1] + 1;
 		return result;
 	}
-	else
+	else  // 最后一位为9，表明有进位
 	{
-		result[result.size() - 1] = 0;
-		for (int i = digits.size() - 2; i >= 0; --i)
+		result[result.size() - 1] = 0;  // 将最后一位置0，此时有进位
+		for (int i = digits.size() - 2; i >= 0; --i)  // 遍历数组
 		{
-			if (digits[i] == 9)
+			if (digits[i] == 9)  // 如果仍为9，该位置0
 			{
 				result[i] = 0;
 			}
-			else 
+			else   // 否则的话，该位+1，进位结束，退出循环
 			{
 				result[i] = digits[i] + 1;
 				break;  // 该位不为9，不会再产生进位了，退出循环
@@ -338,5 +352,70 @@ vector<int> CArray::plusOne2(vector<int>& digits) {
 	}
 	
 	return result;
+
+}
+/*****************函数说明*******************
+* 函数名：vector<int> plusOneRefer(vector<int>& digits)
+* 函数说明：参考大佬题解
+			一共只有两种情况出现：一种是非9无进位，一种是9+1进位变为0
+			所以只要从最后一位开始，每一位+1取除10的余数，如果取余之后不为0，进位结束，返回数组；
+			否则继续做+1运算
+			如果没有从循环中返回，说明最高位进位变为了0，此时在数组头节点处插入1并返回。
+* 算法对比：思路更清晰，代码更简洁
+* 测试结果：
+	执行用时 :4 ms, 在所有 cpp 提交中击败了86.44%的用户
+	内存消耗 :8.6 MB, 在所有 cpp 提交中击败了10.38%的用户
+
+**/
+vector<int> CArray::plusOneRefer(vector<int>& digits)
+{
+	for (int i = digits.size() - 1; i >= 0; --i)
+	{
+		digits[i] = (digits[i] + 1) % 10;  // 取除10的余数即可
+		if (digits[i] != 0)  // 如果该位不为0，表明进位结束
+			return digits;
+	}
+	// 如果没有从循环中返回，表明最高位为0
+	digits.insert(digits.begin(), 1);  // 在头节点处插入元素1
+	return digits;
+}
+
+/************************函数说明***************
+* 函数名：void moveZeroes(vector<int>& nums)
+* 函数参数：一个整型数组
+* 函数返回值：地址返回
+* 问题描述：
+	给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。
+	1、必须在原数组上操作，不能拷贝额外的数组。
+	2、尽量减少操作次数。
+* 求解思路：p、q两个指针，交换0元素（nums[p]）和非0元素(nums[q])的位置
+* 测试结果：12ms，9.5mb 战胜98.64%的cpp用户
+* 备注：开心，官方认定的最优解~
+**/
+
+void CArray::moveZeroes(vector<int>& nums) {
+	
+	for (int q = 0, p = 0; q < nums.size(); ++q)
+	{
+		if (nums[p] != 0)  // 找到第一个p为0的位置之前，p、q都是重合的
+		{
+			
+			++p;
+		}
+		else
+		{			
+			if (nums[q])
+			{
+				nums[p] = nums[q];  // 非0元素覆盖0元素
+				nums[q] = 0;
+				//  swap(nums[p], nums[q]);  // 找到第一个q非零的位置，交换位置,未注释的操作比swap函数操作少一次运算
+				
+				++p;  // 移动指针
+			}
+			 // 此时q仍然为0，继续移动
+
+		}
+	}
+	
 
 }

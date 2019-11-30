@@ -13,6 +13,8 @@ public:
 	std::vector<int> intersectRefer(std::vector<int>& nums1, std::vector<int>& nums2);
 	std::vector<int> plusOne(std::vector<int>& digits);
 	std::vector<int> plusOne2(std::vector<int>& digits);
+	std::vector<int> plusOneRefer(std::vector<int>& digits);
+	void moveZeroes(std::vector<int>& nums);
 };
 
 #endif // !__BASIC_ALGORITHM_ARRAY_H__
