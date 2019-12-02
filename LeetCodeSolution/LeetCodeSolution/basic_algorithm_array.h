@@ -16,6 +16,10 @@ public:
 	std::vector<int> plusOneRefer(std::vector<int>& digits);
 	void moveZeroes(std::vector<int>& nums);
 	std::vector<int> twoSum(std::vector<int>& nums, int target);
+	std::vector<int> twoSumRefer(std::vector<int>& nums, int target);
+	bool isValidSudoku(std::vector<std::vector<char>>& board);
+	bool isValidSudoku2(std::vector<std::vector<char>>& board);
+	void rotate(std::vector<std::vector<int>>& matrix);
 };
 
 #endif // !__BASIC_ALGORITHM_ARRAY_H__

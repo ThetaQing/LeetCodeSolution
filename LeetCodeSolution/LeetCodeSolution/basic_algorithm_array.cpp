@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <stack>
 #include <vector>
+#include <unordered_map>
 using namespace std;
 using std::vector;
 /*************文件说明***********
@@ -473,3 +474,138 @@ vector<int> CArray:: twoSum(vector<int>& nums, int target)
 	}
 	return temp;
 }
+/*******************函数说明*****************
+* 函数名：vector<int> twoSumRefer(vector<int>& nums, int target)
+* 函数说明：和上一个twoSum函数是对同一个题的不同解法
+* 函数实现：一遍哈希表
+			1、定义变量；
+			2、遍历数组，并将已经遍历的数组元素存入哈希表中，其中元素值作为哈希表的关键字，索引作为哈希表的值；
+			3、每遍历一个元素，判断当前元素是否已经存在于哈希表中，如果存在，说明求解完成，push索引，否则继续遍历。
+		
+* 测试信息：
+	执行用时 :4 ms, 在所有 cpp 提交中击败了99.82%的用户
+	内存消耗 :9.9 MB, 在所有 cpp 提交中击败了44.75%的用户
+	
+
+**/
+
+
+vector<int> CArray::twoSumRefer(vector<int>& nums, int target)
+{
+	vector<int> ans(2, -1);
+	unordered_map<int, int> hash;
+	for (int i = 0; i < nums.size(); ++i)
+	{
+		int r = target - nums[i];  // r就是两者的差
+		if (hash.count(r)) // 在容器中搜索键为r的元素，并返回找到的元素数，由于unordered_map中不允许重复的键，所以存在返回1，否则返回0
+			// 如果存在，说明已经找到，数组元素就是哈希表的关键字，其索引是哈希表的元素值
+		{
+			ans[0] = hash[r];
+			ans[1] = i;
+			return ans;
+		}
+		hash[nums[i]] = i;  // 有一个关键字为nums[i]的数对，值（索引）是i
+	}
+	return ans;
+}
+/*****************函数说明******************
+* 函数名：bool isValidSudoku(vector<vector<char>>& board) 
+* 函数参数：9*9的整型矩阵
+* 函数返回值：判断该9*9的矩阵是否能构成一个数独
+* 问题描述;
+		判断一个 9x9 的数独是否有效。只需要根据以下规则，验证已经填入的数字是否有效即可。
+
+		数字 1-9 在每一行只能出现一次。
+		数字 1-9 在每一列只能出现一次。
+		数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+
+		说明:
+
+		一个有效的数独（部分已被填充）不一定是可解的。
+		只需要根据以上规则，验证已经填入的数字是否有效即可。
+		给定数独序列只包含数字 1-9 和字符 '.' 。
+		给定数独永远是 9x9 形式的。
+* 求解思路：
+		1、定义数组元素是哈希表的三个数组分别表示行、列、子数独
+		2、计算子块的索引：bindex = (i / 3) * 3 + j / 3,每个bindex表示一个子块
+		3、遍历该矩阵，分别将存储在行、列、子块数组中并判断是否能在当前行、列、子块中找到当前元素，如果能返回false；
+		4、循环正常结束，返回true。
+* 测试结果：
+执行用时 :24 ms, 在所有 cpp 提交中击败了38.67%的用户
+内存消耗 :12.1 MB, 在所有 cpp 提交中击败了8.85%的用户
+**/
+
+bool CArray::isValidSudoku(vector<vector<char>>& board) 
+{
+	vector<unordered_map<int, int>> row(9), col(9), block(9);
+	for (int i = 0; i < 9; ++i) 
+	{
+		for (int j = 0; j < 9; ++j) 
+		{
+			int bindex = (i / 3) * 3 + j / 3;  // 计算子块的索引
+			char cur = board[i][j];  // 此时的元素值
+			if (cur == '.')  
+				continue;  // 跳过后续步骤
+			if (row[i].count(cur) || col[j].count(cur) || block[bindex].count(cur))  // 如果再同一行、同一列、同一个子块内找到了当前元素，返回false
+				return false;
+			row[i][cur] = 1;  // 将当前元素加入哈希表
+			col[j][cur] = 1;
+			block[bindex][cur] = 1;  // 第bindex块数独的当前元素
+		}
+	}
+	return true;
+}
+/********************************
+* 函数说明：和isValidSudoku函数是同一题，不同之处在于表示行、列的哈希表在每次循环前都会重新定义，不再是定义9个表，节省一部分空间
+* 测试结果：
+执行用时 :24 ms, 在所有 cpp 提交中击败了38.67%的用户
+内存消耗 :11.1 MB, 在所有 cpp 提交中击败了75.97%的用户
+*/
+bool CArray::isValidSudoku2(vector<vector<char>>& board) {
+	vector<unordered_map<int, int>> block(9);
+	for (int i = 0; i < 9; ++i) {
+		unordered_map<int, int>row, col;
+		for (int j = 0; j < 9; ++j) {
+			int bindex = (i / 3) * 3 + j / 3;
+			int cur = board[i][j] - '0';
+			int ver = board[j][i] - '0';
+			if (board[i][j] != '.')
+			{
+				if (row.count(cur)  || block[bindex].count(cur))  
+					return false;
+				row[cur] = 1;
+				block[bindex][cur] = 1;
+			}
+			if (board[j][i] != '.')
+			{
+				if (col.count(ver))
+					return false;
+				col[ver] = 1;
+			}
+			
+			
+		}
+	}
+	return true;
+}
+
+void CArray::rotate(vector<vector<int>>& matrix) {
+	int n = matrix.size();
+	vector<unordered_map<int, int>> flag;
+	for (int i = 0; i < n-i; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (!flag[j].count(n - i - 1))
+			{
+				swap(matrix[i][j], matrix[j][n - i - 1]);
+				flag[j][n - i - 1] = 1;
+			}
+		}
+	}
+	
+}
+
+
+
+
