@@ -123,10 +123,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="basic_algorithm_array.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="solution.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="basic_algorithm_array.h" />
     <ClInclude Include="solution.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
