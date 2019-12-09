@@ -59,7 +59,7 @@ bool CString::isAnagram(string s, string t)
 }
 
 
-bool isAnagram2(string s, string t) {
+bool CString::isAnagram2(string s, string t) {
 
 	int n1 = s.size(), n2 = t.size();
 	if (n1 == 0 && n2 == 0)
@@ -124,47 +124,150 @@ int CString::firstUniqChar(string s)
 	return 0;
 }
 
-//未成功
+/*****************函数说明*****************
+* 函数名：bool isPalindrome(string s)
+* 函数参数：字符串
+* 函数返回值：真、假，当且仅当字符串是回文串的时候输出真
+* 问题描述：给定一个字符串，验证它是否是回文串，只考虑字母和数字字符，可以忽略字母的大小写。
 
-bool isPalindrome(string s) {
+			说明：本题中，我们将空字符串定义为有效的回文串。
+* 解决方案：
+		一、
+			1、定义两个整型变量，分别从头、尾开始记录；
+			2、因为不区分大小写，所以字母之间以距离起始字母的距离做标记，比如：
+				if s[i] = 'd'
+				then temp1 = s[i] - 'a';
+				if s[i] = 'D'
+				then temp1 = s[i] - 'A'
+			3、当时数字时，以其ASCII码作为标记
+			4、比较两个变量，如果不相等返回0。
+		* 测试信息：
+			8ms，86.36%
+		二、
+			1、筛选字母和数字的部分（isalnum函数）
+			2、与32做或运算
+			（a是在A基础上加0b100000,即十进制的32，所以大小写字母与32做或运算结果一样）
+
+		* 测试信息：执行用时 :20 ms, 在所有 cpp 提交中击败了11.14%的用户
+					内存消耗 :9.5 MB, 在所有 cpp 提交中击败了12.50%的用户
+		三、
+			针对思路二的起始，将思路一中判断分区用自带的宏定义实现
+			比如：('A' <= s[i] && s[i] <= 'Z') || ('a' <= s[i] && s[i] <= 'z' )|| ('0' <= s[i] && s[i] <= '9')
+			改为：isalnum(s[i])
+		* 测试信息：执行用时 :4 ms, 在所有 cpp 提交中击败了98.85%的用户
+					内存消耗 :9.2 MB, 在所有 cpp 提交中击败了57.95%的用户
+**/
+
+bool CString::isPalindrome(string s) {
 	if (s.size() <= 1)
 		return 1;
 	int temp1, temp2;
-	for (int i = 0, j = s.size() - 1; i < j; )
+	for (int i = 0, j = s.size() - 1; i <= j; )
 	{
-		if (('A' <= s[i] <= 'Z' || 'a' <= s[i] <= 'z' || '0' <= s[i] <= '9'))  // 只考虑字母和数字
-		{
-			if ('A' <= s[i] <= 'Z')
+		if (('A' <= s[i] && s[i] <= 'Z') || ('a' <= s[i] && s[i] <= 'z' )|| ('0' <= s[i] && s[i] <= '9'))  // 只考虑字母和数字
+		{	// 分区
+			if ('A' <= s[i] && s[i] <= 'Z')  
 				temp1 = s[i] - 'A';
-			else if ('a' <= s[i] <= 'z')
+			else if ('a' <= s[i] && s[i] <= 'z')
 				temp1 = s[i] - 'a';
 			else
-				temp1 = s[i] - '1';
+				temp1 = s[i];
 
 		}
 		else
 		{
 			++i;
-			continue;
+			continue;  // 如果不是有效字符，移向下一个
 		}
-		if ('A' <= s[j] <= 'Z' || 'a' <= s[j] <= 'z' || '0' <= s[j] <= '9')
+		if (('A' <= s[j] && s[j] <= 'Z' )|| ('a' <= s[j] && s[j] <= 'z' )||( '0' <= s[j] && s[j] <= '9'))
 		{
-			if ('A' <= s[j] <= 'Z')
+			// 分区
+			if ('A' <= s[j] && s[j] <= 'Z')
 				temp2 = s[j] - 'A';
-			else if ('a' <= s[j] <= 'z')
+			else if ('a' <= s[j] && s[j] <= 'z')
 				temp2 = s[j] - 'a';
 			else
-				temp2 = s[j] - '1';
+				temp2 = s[j];
 		}
 		else
 		{
 			--j;
-			continue;
+			continue;  // 如果不是有效字符，移向下一个
 		}
 
-		if (temp1 != temp2)
+		if (temp1 != temp2)  // 如果不相等，及时返回
 			return 0;
+		else  // 如果相等，进行下一个比较
+		{
+			++i;
+			--j;
+		}
 	}
 	return 1;
 }
 
+bool CString::isPalindrome2(string s)
+{
+	string str;
+	for (char c : s)
+	{
+		if (isalnum(c)) str += c;  // 表示是否是字母或数字
+	}
+	for (int l = 0, r = str.size() - 1; l < r; ++l, --r)
+	{
+		auto temp1 = str[l] | 32;  // 表示或运算
+		auto temp2 = str[r] | 32;  // A和a在二进制上的变化相当于A增加了0b100000(二进制表示32),所以与32做或运算时大小字母结果一样
+		if ((str[l] | 32) != (str[r] | 32)) return false;
+
+	}
+	return true;
+}
+	
+bool CString::isPalindrome3(string s)
+{
+	if (s.size() <= 1)
+		return 1;
+	int temp1, temp2;
+	for (int i = 0, j = s.size() - 1; i <= j; )
+	{
+		if (isalnum(s[i]))  // 只考虑字母和数字
+		{	// 分区
+			if (isupper(s[i]))
+				temp1 = s[i] - 'A';
+			else if (islower(s[i]))
+				temp1 = s[i] - 'a';
+			else
+				temp1 = s[i];
+
+		}
+		else
+		{
+			++i;
+			continue;  // 如果不是有效字符，移向下一个
+		}
+		if (isalnum(s[j]))
+		{
+			// 分区
+			if (isupper(s[j]))
+				temp2 = s[j] - 'A';
+			else if (islower(s[j]))
+				temp2 = s[j] - 'a';
+			else
+				temp2 = s[j];
+		}
+		else
+		{
+			--j;
+			continue;  // 如果不是有效字符，移向下一个
+		}
+
+		if (temp1 != temp2)  // 如果不相等，及时返回
+			return 0;
+		else  // 如果相等，进行下一个比较
+		{
+			++i;
+			--j;
+		}
+	}
+	return 1;
+}
