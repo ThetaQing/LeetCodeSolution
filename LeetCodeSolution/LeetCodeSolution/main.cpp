@@ -38,15 +38,37 @@ int int2bit(int n)
 	return count;
 }
 
+int checkInt(string s)
+{
+	int ans = 0;
 
+	for (int i  = 0;i < s.size(); ++i)
+	{
+		try 
+		{
+			if (ans > INT_MAX / 10)
+				return INT_MAX;
+			ans = ans * 10 + (s[i]-'0');
+			
+		}
+		catch (...)
+		{
+			return 0;
+		}
+		
+	}
+	return ans;
+}
 
 int main()
 {
 	CString myClass;
 	
-	string s = "aA";
+	string s = "    .1";
 	
-	int re= myClass.isPalindrome2(s);
+	int re= myClass.myAtoi(s);
+
+
 	cout << re << endl;
 	std::system("pause");
 	return 0;

@@ -13,6 +13,7 @@ public:
 	bool isPalindrome(string s);  
 	bool isPalindrome2(string s); 
 	bool isPalindrome3(string s);  // 判断是否是回文数
+	int myAtoi(string str);  // 字符串转整数
 };
 
 

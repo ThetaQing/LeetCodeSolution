@@ -2,6 +2,7 @@
 #include <iostream>
 #include<string>
 #include <algorithm>
+
 #include "basic_algorithm_string.h"
 using namespace std;
 /*************文件说明******************
@@ -270,4 +271,94 @@ bool CString::isPalindrome3(string s)
 		}
 	}
 	return 1;
+}
+
+/*****************函数说明****************
+* 函数名：
+* 函数参数：
+* 函数返回值：
+* 问题描述：
+	请你来实现一个 atoi 函数，使其能将字符串转换成整数。
+
+	首先，该函数会根据需要丢弃无用的开头空格字符，直到寻找到第一个非空格的字符为止。
+
+	当我们寻找到的第一个非空字符为正或者负号时，则将该符号与之后面尽可能多的连续数字组合起来，作为该整数的正负号；假如第一个非空字符是数字，则直接将其与之后连续的数字字符组合起来，形成整数。
+
+	该字符串除了有效的整数部分之后也可能会存在多余的字符，这些字符可以被忽略，它们对于函数不应该造成影响。
+
+	注意：假如该字符串中的第一个非空格字符不是一个有效整数字符、字符串为空或字符串仅包含空白字符时，则你的函数不需要进行转换。
+
+	在任何情况下，若函数不能进行有效的转换时，请返回 0。
+* 解决方案：
+* 测试信息：
+	执行用时 :4 ms, 在所有 cpp 提交中击败了92.60%的用户
+	内存消耗 :8.7 MB, 在所有 cpp 提交中击败了75.58%的用户
+
+**/
+
+int CString::myAtoi(string str) 
+{
+	int n = str.size();
+	int result = 0;
+	int flag = 0;  //标志位，是否找到有效字符
+	vector<char> ans;
+	if (str.size() <= 0)
+		return 0;
+	for (int i = 0; i < n; ++i)
+	{
+		if (!flag)
+		{
+			if (isblank(str[i]))
+				continue;  // 如果是开头，继续查找
+			else if (!isdigit(str[i]))  // 如果是字母，无法转换
+				return 0;
+			else if (isdigit(str[i]))
+			{
+				ans.push_back('+');
+				ans.push_back(str[i]);
+				flag = 1;
+				
+			}
+			else if (str[i] == '-' || str[i] == '+')
+			{
+				ans.push_back(str[i]);
+				flag = 1;
+			}
+
+		}
+		else if (flag)
+		{
+			if (!isdigit(str[i]))
+				break;  // 如果已经有有效字符了，退出循环
+			else if (isdigit(str[i]))
+				ans.push_back(str[i]);
+
+		}		
+		
+
+	}
+	if (ans.size() <= 1)
+		return 0;  // 没有找到有效的
+	// 判断符号位
+	if (ans[0] == '-')
+		flag = -1;
+	else
+		flag = 1;
+	for (int i = 1; i < ans.size(); ++i)
+	{	
+		if (result > INT_MAX / 10)
+			return (flag>0) ? INT_MAX : INT_MIN;
+		else if (result == INT_MAX / 10)
+		{
+			if (ans[i] - '0' >= 8)
+				return (flag > 0) ? INT_MAX : INT_MIN;
+			
+				
+				
+		}
+		result = result * 10 + (ans[i] - '0');
+		
+	}
+	return flag * result;
+
 }
