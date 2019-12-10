@@ -274,9 +274,9 @@ bool CString::isPalindrome3(string s)
 }
 
 /*****************函数说明****************
-* 函数名：
-* 函数参数：
-* 函数返回值：
+* 函数名：int myAtoi(string str) 
+* 函数参数：待转换字符串
+* 函数返回值：返回一个整数，如果字符串能转换成整数，返回该整数，否则返回0
 * 问题描述：
 	请你来实现一个 atoi 函数，使其能将字符串转换成整数。
 
@@ -290,6 +290,21 @@ bool CString::isPalindrome3(string s)
 
 	在任何情况下，若函数不能进行有效的转换时，请返回 0。
 * 解决方案：
+	1、定义符号标志和开始查找标志flag（一个变量做两次标志），数组用于存储查找到的所有有效字符
+	2、遍历字符串
+		当尚且没有非空字符出现时
+		(1) 如果是空白字符，continue；
+		(2) 如果第一个非空字符是符号位，flag变为1，表示开始搜索连续整数；
+		(3) 如果第一个非空字符是其他字符，无法转换，返回0；
+		(4) 如果第一个非空字符是数字，flag变为1，表示开始搜索连续整数序列。
+		当开始搜索整数时
+		(1) 遇到非数字字符退出循环，停止搜索；
+		(2) 对于数字字符，入栈。
+	3、遍历数组
+		首先判断符号位，用flag变量保存；
+		在判断是否溢出
+		最后转换
+	4、返回转换后的整数与符号位的乘积
 * 测试信息：
 	执行用时 :4 ms, 在所有 cpp 提交中击败了92.60%的用户
 	内存消耗 :8.7 MB, 在所有 cpp 提交中击败了75.58%的用户
@@ -310,25 +325,27 @@ int CString::myAtoi(string str)
 		{
 			if (isblank(str[i]))
 				continue;  // 如果是开头，继续查找
-			else if (!isdigit(str[i]))  // 如果是字母，无法转换
-				return 0;
-			else if (isdigit(str[i]))
+
+			else if (str[i] == '-' || str[i] == '+')  // 如果非空字符是符号位
 			{
-				ans.push_back('+');
+				ans.push_back(str[i]);
+				flag = 1;
+			}
+			else if (!isdigit(str[i]))  //  如果不是符号位也不是空白也不是数字，表示不能进行转换
+				return 0;
+			else if (isdigit(str[i]))  // 如果是数字，添加
+			{
+				ans.push_back('+');  // 主要是为了对称，在循环的时候可以设起始位置为1，而不是0
 				ans.push_back(str[i]);
 				flag = 1;
 				
 			}
-			else if (str[i] == '-' || str[i] == '+')
-			{
-				ans.push_back(str[i]);
-				flag = 1;
-			}
+			
 
 		}
-		else if (flag)
+		else if (flag)  // 如果找到了第一个有效字符
 		{
-			if (!isdigit(str[i]))
+			if (!isdigit(str[i]))  // 下一个不为整数的
 				break;  // 如果已经有有效字符了，退出循环
 			else if (isdigit(str[i]))
 				ans.push_back(str[i]);
@@ -346,15 +363,12 @@ int CString::myAtoi(string str)
 		flag = 1;
 	for (int i = 1; i < ans.size(); ++i)
 	{	
-		if (result > INT_MAX / 10)
-			return (flag>0) ? INT_MAX : INT_MIN;
-		else if (result == INT_MAX / 10)
+		if (result > INT_MAX / 10)  // 如果大于INT_MAX/10说明该数*10之后超出表达范围
+			return (flag>0) ? INT_MAX : INT_MIN;  // 判断符号
+		else if (result == INT_MAX / 10)  // 如果等于
 		{
-			if (ans[i] - '0' >= 8)
-				return (flag > 0) ? INT_MAX : INT_MIN;
-			
-				
-				
+			if (ans[i] - '0' >= 8)  // 判断这个位置的数是否大于8，（INT_MAX的个位为7，INT_MIN的个位为8）如果大于8，不能被表示，等于8，刚好表示INT_MIN，返回还是INT_MIN
+				return (flag > 0) ? INT_MAX : INT_MIN;		
 		}
 		result = result * 10 + (ans[i] - '0');
 		
@@ -362,3 +376,243 @@ int CString::myAtoi(string str)
 	return flag * result;
 
 }
+
+/******************函数说明******************
+* 修改信息：
+	取消了数组的使用，添加了符号位标志，在遍历字符串的过程中直接进行转换和溢出检测
+* 测试信息：
+	执行用时 :8 ms, 在所有 cpp 提交中击败了65.27%的用户
+	内存消耗 :8.4 MB, 在所有 cpp 提交中击败了88.51%的用户
+
+* 备注：相同的思路，为什么会比第一种方法慢呢，空间使用也没有少多少，emmmm
+**/
+
+int CString::myAtoi2(string str)
+{
+	int n = str.size();
+	int result = 0;
+	int startFlag = 0;  //标志位，是否找到有效字符
+	char symbolFlag = '-';  // 符号标志
+	vector<char> ans;
+	if (str.size() <= 0)
+		return 0;
+	for (int i = 0; i < n; ++i)
+	{
+		if (!startFlag)
+		{
+			if (isblank(str[i]))
+				continue;  // 如果是开头，继续查找
+
+			else if (str[i] == '-' || str[i] == '+')  // 如果非空字符是符号位
+			{
+				symbolFlag = symbolFlag ^ str[i];  // 初始symbolFlag为'-'，如果是'-'，返回空，否则返回非空
+				startFlag = 1;
+			}
+			else if (!isdigit(str[i]))  //  如果不是符号位也不是空白也不是数字，表示不能进行转换
+				return 0;
+			else if (isdigit(str[i]))  // 如果是数字，添加
+			{
+				symbolFlag = '+';
+				result = result + str[i] - '0';  // 第一个值
+				startFlag = 1;
+
+			}
+
+
+		}
+		else // 开始搜索
+		{
+			if (!isdigit(str[i]))  // 下一个不为整数的
+				break;  // 如果已经有有效字符了，退出循环
+			else if (isdigit(str[i]))
+			{
+				if (result > INT_MAX / 10)  // 如果大于INT_MAX/10说明该数*10之后超出表达范围
+					return symbolFlag ? INT_MAX : INT_MIN;  // 判断符号
+				else if (result == INT_MAX / 10)  // 如果等于
+				{
+					if (str[i] - '0' >= 8)  // 判断这个位置的数是否大于8，（INT_MAX的个位为7，INT_MIN的个位为8）如果大于8，不能被表示，等于8，刚好表示INT_MIN，返回还是INT_MIN
+						return symbolFlag ? INT_MAX : INT_MIN;
+				}
+				result = result * 10 + (str[i] - '0');
+
+			}
+
+
+		}
+
+
+	}
+	if (symbolFlag)
+		return result;
+	else
+		return -1 * result;
+
+}
+
+/********************函数说明*****************
+* 函数名：string countAndSay(int n)
+* 函数返回值：第n个报数序列
+* 问题描述：
+	报数序列是一个整数序列，按照其中的整数的顺序进行报数，得到下一个数。其前五项如下：
+
+	1.     1
+	2.     11
+	3.     21
+	4.     1211
+	5.     111221
+	1 被读作  "one 1"  ("一个一") , 即 11。
+	11 被读作 "two 1s" ("两个一"）, 即 21。
+	21 被读作 "one 2",  "one 1" （"一个二" ,  "一个一") , 即 1211。
+
+	给定一个正整数 n（1 ≤ n ≤ 30），输出报数序列的第 n 项。
+
+	注意：整数顺序将表示为一个字符串。
+
+* 解决方案：
+	1、定义生成下一字符串的函数nextString(),
+	2、迭代生成第n个字符串
+	3、返回
+
+* 测试信息：
+	执行用时 :4 ms, 在所有 cpp 提交中击败了90.24%的用户
+	内存消耗 :8.7 MB, 在所有 cpp 提交中击败了78.36%的用户
+
+
+
+
+*/
+
+string CString::countAndSay(int n) {
+	string ans = "1";
+	
+	for (int i = 1; i < n; ++i)
+	{
+		ans = nextString(ans);
+	}
+	
+	return ans;
+}
+/************函数说明***************
+* 函数名：string nextString(string s)
+* 函数参数：该时刻的字符串；
+* 函数返回值：根据上述的报数规律得到下一时刻的字符串
+* 函数实现：
+		1、定义一个数组，每次存储相同字符；定义一个临时变量存储上一时刻的字符；
+		2、如果两个时刻的字符相同，继续向mys数组中添加该字符；
+		3、如果字符不相同，将前一个字符的统计信息加入到ans字符串中，然后更新temp值并清空数组
+		4、如果到了最后一个字符，将该字符的统计信息加入到ans字符串中，并退出
+		5、返回ans字符串
+***/
+string CString::nextString(string s)  // 生成序列
+{
+	string ans;
+	vector<char> mys;
+	
+	char temp = s[0];
+	for (int i = 0; i < s.size(); ++i)
+	{
+		
+		if (temp == s[i])  // 如果是同一个字符
+			mys.push_back(s[i]);
+		
+		else
+		{
+			int n = mys.size();
+			ans.push_back(n + '0');  // n个
+			ans.push_back(temp);  // temp表示的字符
+			temp = s[i];  // 重新开始
+			mys.clear();  // 清空
+			mys.push_back(s[i]);
+		}
+		if (i == s.size() - 1)
+		{
+			int n = mys.size();
+			ans.push_back(n + '0');  // n个
+			ans.push_back(temp);  // temp表示的字符
+			temp = s[i];  // 重新开始
+			mys.clear();  // 清空
+			break;
+		}
+	}
+	return ans;
+}
+// 生成序列
+// 更改信息：取消数组使用，直接定义变量存储长度
+string CString::nextString2(string s)  // 生成序列
+{
+	string ans;
+	int len = 0;  // 字符长度
+
+	char temp = s[0];
+	for (int i = 0; i < s.size(); ++i)
+	{
+
+		if (temp == s[i])  // 如果是同一个字符
+			len += 1;
+
+		else
+		{
+			
+			ans.push_back(len + '0');  // n个
+			ans.push_back(temp);  // temp表示的字符
+			temp = s[i];  // 重新开始
+			len = 1;
+		}
+		
+	}
+	// 最后一个字符
+	ans.push_back(len + '0');  // n个
+	ans.push_back(temp);  // temp表示的字符
+	
+	return ans;
+}
+
+/**************函数说明***************
+* 函数名：string longestCommonPrefix(vector<string>& strs) 
+* 函数参数：待查找的字符串数组
+* 函数返回值：返回字符串，公共前缀
+* 问题描述：
+	编写一个函数来查找字符串数组中的最长公共前缀。
+
+	如果不存在公共前缀，返回空字符串 ""。
+
+* 实现方案：
+	1、两层循环，外层是控制公共前缀的，当通过内层循环，公共前缀中入栈下一个字符；
+		通过第一个字符串控制公共前缀添加新字符
+	2、内层循环，检测该数组中所有的字符串是否都含有这个公共前缀
+		如果没有查到，pop最后一个字符并返回
+* 测试信息：
+		4 ms  95.20%
+**/
+
+string CString::longestCommonPrefix(vector<string>& strs) {
+	
+	if (strs.empty())
+		return "";
+	string ans = "";
+	
+	int n = strs.size();
+	int j = 0;
+	while(1)
+	{
+		
+		for (int i = 0; i < n; ++i)
+		{
+			if (strs[i].find(ans) != 0)  // 查找前缀，如果是公共前缀，那么返回位置为0
+			{
+				ans.pop_back();  // 如果没有找到，pop最后一个字符并返回
+				return ans;
+			}
+
+		}
+		if (j < strs[0].size())  // 以第一个字符串为公共前缀添加新的字符
+			ans.push_back(strs[0][j]);
+		else
+			break;
+		j += 1;  // 下一个字符的位置
+	}
+	
+	
+	return ans;
+}
+

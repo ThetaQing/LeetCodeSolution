@@ -13,7 +13,12 @@ public:
 	bool isPalindrome(string s);  
 	bool isPalindrome2(string s); 
 	bool isPalindrome3(string s);  // 判断是否是回文数
-	int myAtoi(string str);  // 字符串转整数
+	int myAtoi(string str);  
+	int myAtoi2(string str);  // 字符串转整数
+	string nextString(string s);
+	string nextString2(string s);
+	string countAndSay(int n);
+	string longestCommonPrefix(std::vector<string>& strs);
 };
 
 

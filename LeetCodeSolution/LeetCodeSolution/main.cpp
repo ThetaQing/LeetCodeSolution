@@ -3,6 +3,7 @@
 #include <bitset>
 #include "windows.h"
 #include<cmath>
+#include <vector>
 #include "basic_algorithm_string.h"
 using namespace std;
 
@@ -64,12 +65,13 @@ int main()
 {
 	CString myClass;
 	
-	string s = "    .1";
-	
-	int re= myClass.myAtoi(s);
+	string s = "1211";
+	vector<string> vec = { "flower","flow","flight" };
+	string re= myClass.longestCommonPrefix(vec);
 
-
-	cout << re << endl;
+	for (auto i : re)
+		cout << i << endl;
+		
 	std::system("pause");
 	return 0;
 }
