@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <stack>
 #include <vector>
+#include <string>
 #include <unordered_map>
 using namespace std;
 using std::vector;
@@ -588,7 +589,7 @@ bool CArray::isValidSudoku2(vector<vector<char>>& board) {
 	}
 	return true;
 }
-
+// 暂未成功
 void CArray::rotate(vector<vector<int>>& matrix) {
 	int n = matrix.size();
 	vector<unordered_map<int, int>> flag;
@@ -605,6 +606,8 @@ void CArray::rotate(vector<vector<int>>& matrix) {
 	}
 	
 }
+
+
 
 
 

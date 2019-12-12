@@ -4,6 +4,7 @@
 #include "windows.h"
 #include<cmath>
 #include <vector>
+#include "basic_algorithm_linkedList.h"
 #include "basic_algorithm_string.h"
 using namespace std;
 
@@ -39,32 +40,17 @@ int int2bit(int n)
 	return count;
 }
 
-int checkInt(string s)
-{
-	int ans = 0;
 
-	for (int i  = 0;i < s.size(); ++i)
-	{
-		try 
-		{
-			if (ans > INT_MAX / 10)
-				return INT_MAX;
-			ans = ans * 10 + (s[i]-'0');
-			
-		}
-		catch (...)
-		{
-			return 0;
-		}
-		
-	}
-	return ans;
-}
 
 int main()
 {
 	CString myClass;
-	
+	ListNode head(1), headNext(2), *ans(0);
+	CLinkedList myLinkedList;
+	head.val = 1;
+	headNext.val = 2;
+	head.next = &headNext;
+	ans = myLinkedList.reverseList(&head);
 	string s = "1211";
 	vector<string> vec = { "flower","flow","flight" };
 	string re= myClass.longestCommonPrefix(vec);

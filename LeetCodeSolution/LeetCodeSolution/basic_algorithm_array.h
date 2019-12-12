@@ -1,6 +1,8 @@
 #ifndef __BASIC_ALGORITHM_ARRAY_H__
 #define __BASIC_ALGORITHM_ARRAY_H__
 #include <vector>
+#include <string>
+using std::string;
 class CArray
 {
 public:
@@ -20,6 +22,7 @@ public:
 	bool isValidSudoku(std::vector<std::vector<char>>& board);
 	bool isValidSudoku2(std::vector<std::vector<char>>& board);
 	void rotate(std::vector<std::vector<int>>& matrix);
+
 };
 
 #endif // !__BASIC_ALGORITHM_ARRAY_H__

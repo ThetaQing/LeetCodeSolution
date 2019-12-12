@@ -24,12 +24,24 @@
     <ClCompile Include="basic_algorithm_array.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="basic_algorithm_string.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="basic_algorithm_linkedList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="solution.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="basic_algorithm_array.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="basic_algorithm_string.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="basic_algorithm_linkedList.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
