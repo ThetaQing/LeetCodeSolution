@@ -14,6 +14,9 @@ class CLinkedList
 public:
 	ListNode* removeNthFromEnd(ListNode* head, int n);
 	ListNode* reverseList(ListNode* head);
+	ListNode* reverseList2(ListNode* head);
+	ListNode* reverseList3(ListNode* head);
+	ListNode* mergeTwoLists(ListNode* l1, ListNode* l2);
 };
 
 
