@@ -164,7 +164,7 @@ ListNode* CLinkedList::reverseList3(ListNode* head) {
 ListNode* CLinkedList::mergeTwoLists(ListNode* l1, ListNode* l2) {
 	
 	
-	/*
+
 	
 	ListNode ans(-1);
 	ListNode* temp;
@@ -202,12 +202,25 @@ ListNode* CLinkedList::mergeTwoLists(ListNode* l1, ListNode* l2) {
 	else
 		temp->next = p1;
 
-	return temp->next;*/
+	return temp->next;
 
 
 }
 
-ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
+/****************函数说明****************
+* 函数名：ListNode* getIntersectionNode(ListNode* headA, ListNode* headB)
+* 函数参数：两个链表
+* 函数返回值：如果两个链表相交，返回两个链表相交的第一个节点，否则返回NULL；
+* 函数实现：
+	 (一) 两层循环……嘤嘤嘤
+	（二）利用路程相等
+* 测试信息：5%，两层循环，死慢死慢滴
+
+
+
+**/
+
+ListNode* CLinkedList::getIntersectionNode(ListNode* headA, ListNode* headB) {
 	ListNode* pA = headA;
 	ListNode* pB = headB;
 	// 
@@ -227,4 +240,155 @@ ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
 		pA = pA->next;
 	}
 	return NULL;
+}
+ListNode* getIntersectionNode2(ListNode* headA, ListNode* headB)
+{
+	ListNode* pA = headA;
+	ListNode* pB = headB;
+
+
+	while (pA != pB)
+	{
+		if (pA == NULL)  // 如果pA走到A链表的尾结点了，转去走B链表
+			pA = headB;
+		else
+			pA = pA->next;
+
+		if (pB == NULL)  // 如果pB走到B链表的尾结点了，转去走A链表
+			pB = headA;
+		else
+			pB = pB->next;
+
+	}
+	// 最后相遇的点就是交点
+	// A: ——*——
+	// B: ———*———
+	// pA: ——*——  ———*———  ———*———  ———*———  ———*———  ———*———  ———*———  ———*
+	// PB：———*———  ——*——  ——*——  ——*——  ——*——  ——*——  ——*——  ——*——  ——*——  ——*（相遇） 
+	return pA;
+}
+
+/***************函数说明*****************
+* 函数名：ListNode* removeElements(ListNode* head, int val)
+* 函数参数：链表的头节点，待删除的节点元素值val
+* 函数返回值：返回删除所有val值的节点后的新链表
+* 函数实现：
+	双指针法：
+		currNode表示当前节点，preNode表示currNode的前一个节点
+		如果当前节点就是要删除的节点，将当前节点的前一个节点指向当前节点的下一个节点（事先定义变量暂存）nextNode，然后把当前节点变为nextNode，继续遍历；
+		如果当前节点不是要删除的节点，移动指针。
+		这里需要指出的是对头结点是要删除节点的处理
+		（一）先处理头结点，再处理其他，保证链表遍历中要删除的点都有前一个节点。
+		（二）创建一个虚拟头结点，保证每一个要删除的节点都有一个前驱。
+* 测试信息：
+	（一） 
+		 32ms， 86.37%
+	
+	（二）执行用时 :32 ms, 在所有 cpp 提交中击败了86.37%的用户
+		  内存消耗 :10.9 MB, 在所有 cpp 提交中击败了88.95%的用户
+**/
+ListNode* CLinkedList::removeElements(ListNode* head, int val) {
+
+	if (head == NULL)
+		return NULL;
+	while (head != NULL && head->val == val)  // 如果要删除的是头结点（不存在删除节点的前一个节点）
+		head = head->next;
+	ListNode* preNode = head;  // 存储要删除节点的前一个节点
+	ListNode* currNode = head;
+	while (currNode != NULL)
+	{		
+		if ( currNode->val == val)  // 如果现在这个节点就是要删除的节点
+		{
+			ListNode* nextNode = currNode->next;
+			// 虽然这里没有对preNode显式赋值，但是这里可以保证第一次执行的时候先执行的else语句对preNode赋值（因为第一次删除的不可能是头结点，头结点已经在上一条while语句中全部处理掉了）
+			preNode->next = nextNode;  // 把当前节点的前一个节点的指针指向当前节点的下一个节点
+			currNode = nextNode;  // 继续遍历
+		}
+		else
+		{
+			preNode = currNode;
+			currNode = currNode->next;
+		}
+	}
+	return head;
+
+
+}
+ListNode* CLinkedList::removeElements2(ListNode* head, int val) {
+	
+	if (head == NULL)
+		return NULL;
+	// 创建一个虚拟头结点
+	ListNode dummyNode(val - 1);
+	dummyNode.next = head;
+
+	ListNode* preNode = &dummyNode;  // 存储要删除节点的前一个节点
+	ListNode* currNode = head;
+	while (currNode != NULL)
+	{
+		if (currNode->val == val)  // 如果现在这个节点就是要删除的节点
+		{
+			ListNode* nextNode = currNode->next;
+			
+			preNode->next = nextNode;  // 把当前节点的前一个节点的指针指向当前节点的下一个节点
+			currNode = nextNode;  // 继续遍历
+		}
+		else
+		{
+			preNode = currNode;
+			currNode = currNode->next;
+		}
+	}
+	return dummyNode.next;
+}
+// 16ms， 94.55%
+/******************函数说明******************
+* 函数名：ListNode* oddEvenList(ListNode* head)
+* 函数参数：一个链表
+* 函数返回值：返回一个将原链表的奇数节点和偶数节点重新排列后的链表
+* 问题描述：
+	给定一个单链表，把所有的奇数节点和偶数节点分别排在一起。请注意，这里的奇数节点和偶数节点指的是节点编号的奇偶性，而不是节点的值的奇偶性。
+
+	请尝试使用原地算法完成。你的算法的空间复杂度应为 O(1)，时间复杂度应为 O(nodes)，nodes 为节点总数。
+
+	来源：力扣（LeetCode）
+	链接：https://leetcode-cn.com/problems/odd-even-linked-list
+	著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+* 解决方案：
+		五个变量，分别表示当前奇数节点、当前偶数节点、下一个奇数节点、下一个偶数节点、偶数节点的起始节点
+		1、更改指向关系
+			将当前奇数节点的下一个节点变为下一个奇数节点：oddNode->next = nextOdd;
+			将当前偶数节点的下一个节点变为下一个偶数节点：evenNode->next = nextEven;
+			建立奇偶连接，让新的奇数节点的下一个节点是偶数节点的起始节点：nextOdd->next = evenBegin;
+		2、更新节点：
+			将当前奇数节点变为下一个奇数节点：oddNode = nextOdd;
+			当前偶数节点变为下一个偶数节点：evenNode = nextEven;
+**/
+ListNode* oddEvenList(ListNode* head) {
+	
+
+	if (head == NULL || head->next == NULL)
+		return head;
+	ListNode* oddNode = head, * evenNode = head->next;  // 分别表示当前的奇数节点和偶数节点
+	ListNode* nextOdd, * nextEven;  // 分别表示下一个奇数节点和偶数节点
+	ListNode* evenBegin = head->next;
+	// 不管是奇数还是偶数，只要退出循环就可以返回了
+	while (evenNode != NULL && evenNode->next != NULL)
+	{
+		nextOdd = evenNode->next;  // 保存节点
+		nextEven = nextOdd->next;
+
+		oddNode->next = nextOdd;  // 更改指向关系
+		evenNode->next = nextEven;
+
+		nextOdd->next = evenBegin;  // 建立奇偶连接
+
+		// 更新节点
+		oddNode = nextOdd;
+		evenNode = nextEven;
+	}
+	// 如果 evenNode == NULL，说明当前的偶数节点就是最后一个节点（NULL）
+	// 如果 evenNode->next == NULL，说明当前的偶数节点就是尾结点，尾结点后面是NULL
+	return head;
 }

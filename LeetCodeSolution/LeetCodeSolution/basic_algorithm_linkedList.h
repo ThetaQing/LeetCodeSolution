@@ -17,6 +17,9 @@ public:
 	ListNode* reverseList2(ListNode* head);
 	ListNode* reverseList3(ListNode* head);
 	ListNode* mergeTwoLists(ListNode* l1, ListNode* l2);
+	ListNode* getIntersectionNode(ListNode* headA, ListNode* headB);
+	ListNode* removeElements(ListNode* head, int val);
+	ListNode* removeElements2(ListNode* head, int val);
 };
 
 
