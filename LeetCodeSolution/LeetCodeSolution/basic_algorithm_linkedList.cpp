@@ -168,11 +168,11 @@ ListNode* CLinkedList::reverseList3(ListNode* head) {
 // 失败
 ListNode* CLinkedList::mergeTwoLists(ListNode* l1, ListNode* l2) {
 		
-	ListNode *ans;
-	ListNode* currNode, *nextNode, *tempNode;
+	ListNode *ans = NULL;
+	ListNode* currNode = NULL, *nextNode = NULL, *tempNode = NULL;
 	ListNode* p1 = l1, * p2 = l2;
 
-	while (p1 != NULL && p2 != NULL)
+	/*while (p1 != NULL && p2 != NULL)
 	{
 		if (p1->val < p2->val)
 		{
@@ -193,9 +193,9 @@ ListNode* CLinkedList::mergeTwoLists(ListNode* l1, ListNode* l2) {
 		currNode->next = p2;
 	}
 	else
-		currNode->next = p1;
+		currNode->next = p1;*/
 
-	return currNode->next;
+	return l1;
 
 
 }
@@ -385,32 +385,72 @@ ListNode* oddEvenList(ListNode* head) {
 	// 如果 evenNode->next == NULL，说明当前的偶数节点就是尾结点，尾结点后面是NULL
 	return head;
 }
-
-bool isPalindrome(ListNode* head) {
+/*******************函数说明******************
+* 函数名：bool isPalindrome(ListNode* head) 
+* 函数参数：链表的头结点
+* 函数返回值：是否是回文链表，当且仅当链表是回文链表返回true
+* 问题描述：234.回文链表：请判断一个链表是否为回文链表。
+* 解决方案：
+		将前半部分链表翻转，再比较
+		1、先求长度len；
+		2、再给当前节点、当前节点的前一个节点、当前节点的后一个节点赋值（也就是对特殊情况预先处理）
+		3、翻转前一半链表：
+			把当前节点currNode的next指针指向前一个节点preNode；
+			更新新的currNode、preNode、nextNode
+		4、比较翻转后的前一半链表与后一半链表是否一一对应相等
+		（注意，如果链表长度是奇数个，currNode还要再移动一个位置）
+* 测试信息：24ms，72.67%
+**/
+bool CLinkedList:: isPalindrome(ListNode* head) {
 	
 	
 	ListNode* currNode = head;
 	ListNode* preNode = head;
-	
-	while (currNode != NULL && head != NULL)
+	ListNode* nextNode = head;
+	// 先求长度
+	int len = 0;
+	while (currNode != NULL)
 	{
-		preNode = currNode;
-		
-		
-		if (currNode->next == NULL)  // 此时当前节点是尾结点
-		{
-			if (currNode->val == head->val)  // 如果是回文链表，尾结点的值等于头结点的值
-			{
-				head = head->next;				
-				currNode = preNode;
-			}
-			else
-				return 0;
-		}
-		else
+		currNode = currNode->next;
+		len += 1;
+	}
+	int index = 1;
+	currNode = head;
+	preNode = currNode;
+	if (currNode != NULL && currNode->next != NULL)
+	{
+		currNode = currNode->next;
+		nextNode = currNode->next;
+	}
+	else  // 链表为空或者只有一个元素
+		return 1;
+
+	head->next = NULL;  // 头结点next指针清零，避免循环
+	// 翻转前一半
+	while (index < len / 2 && currNode != NULL)
+	{
+		currNode->next = preNode;  // 翻转		
+		preNode = currNode;  // 更新新的preNode
+		currNode = nextNode;  // 更新新的currNode
+		nextNode = currNode->next;  // 更新新的nextNode
+		// 三个节点的更新顺序一定是先preNode，再currNode，最后nextNode
+		index += 1;
+	}
+	if (len % 2 && currNode != NULL)  // 如果是奇数个节点，要后移一个节点
+		currNode = currNode->next;
+
+	while (currNode != NULL)
+	{
+		if (currNode->val != preNode->val)  // 如果不相等，不是回文链表
+			return 0;
+		else  // 否则比较下一对
 		{
 			currNode = currNode->next;
+			preNode = preNode->next;
 		}
 	}
+	return 1;
+	
+
 }
 
