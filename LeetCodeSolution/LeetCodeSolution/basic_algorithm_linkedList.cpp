@@ -159,50 +159,43 @@ ListNode* CLinkedList::reverseList3(ListNode* head) {
 
 }
 
-/***************************************/
-
+/********************函数说明******************
+* 函数名：ListNode* mergeTwoLists(ListNode* l1, ListNode* l2)
+* 函数参数：两个有序链表
+* 函数返回值：两个有序链表合并之后的有序链表
+* 函数实现：
+*/
+// 失败
 ListNode* CLinkedList::mergeTwoLists(ListNode* l1, ListNode* l2) {
-	
-	
-
-	
-	ListNode ans(-1);
-	ListNode* temp;
+		
+	ListNode *ans;
+	ListNode* currNode, *nextNode, *tempNode;
 	ListNode* p1 = l1, * p2 = l2;
-	temp = &ans;
-	while (p1->next != NULL && p2->next != NULL)
+
+	while (p1 != NULL && p2 != NULL)
 	{
 		if (p1->val < p2->val)
-
 		{
-			temp->next = p1;
-
-			p1 = p1->next;
-			temp = temp->next;
-			//p1->val = p1->next->val;
-			//p1->next = p1->next->next;
+			tempNode = p1->next;
+			
 
 		}
 		if (p1->val >= p2->val)
 		{
-			temp->next = p2;
-			//p2->val = p2->next->val;
-			//p2->next = p2->next->next;
-			p2 = p2->next;
-			temp = temp->next;
+			
 		}
 
 
 
 	}
-	if (p1->next == NULL && p2->next != NULL)
+	if (p1 == NULL && p2 != NULL)
 	{
-		temp->next = p2;
+		currNode->next = p2;
 	}
 	else
-		temp->next = p1;
+		currNode->next = p1;
 
-	return temp->next;
+	return currNode->next;
 
 
 }
@@ -392,3 +385,32 @@ ListNode* oddEvenList(ListNode* head) {
 	// 如果 evenNode->next == NULL，说明当前的偶数节点就是尾结点，尾结点后面是NULL
 	return head;
 }
+
+bool isPalindrome(ListNode* head) {
+	
+	
+	ListNode* currNode = head;
+	ListNode* preNode = head;
+	
+	while (currNode != NULL && head != NULL)
+	{
+		preNode = currNode;
+		
+		
+		if (currNode->next == NULL)  // 此时当前节点是尾结点
+		{
+			if (currNode->val == head->val)  // 如果是回文链表，尾结点的值等于头结点的值
+			{
+				head = head->next;				
+				currNode = preNode;
+			}
+			else
+				return 0;
+		}
+		else
+		{
+			currNode = currNode->next;
+		}
+	}
+}
+
