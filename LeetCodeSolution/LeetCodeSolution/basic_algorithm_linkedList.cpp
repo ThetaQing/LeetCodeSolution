@@ -454,3 +454,166 @@ bool CLinkedList:: isPalindrome(ListNode* head) {
 
 }
 
+/****************函数说明*************
+* 函数名：ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) 
+* 函数参数：
+* 函数返回值：
+* 问题描述：
+* 解决方案：
+		1、先翻转
+		2、再加减
+* 测试信息：
+
+
+**/
+ListNode* CLinkedList::addTwoNumbers(ListNode* l1, ListNode* l2) {
+
+	ListNode* currl1Node = l1, * currl2Node = l2, *preNode = l1;
+	// 相加
+	ListNode* ans = currl1Node;
+	int sum = 0;
+	int flag = 0;  // 进位标志
+	while (currl1Node != NULL || currl2Node != NULL)  // 如果不是尾结点
+	{
+		if (currl1Node == NULL && currl2Node != NULL)  // 如果currl1Node到尾结点了
+		{
+			currl1Node = currl2Node;
+			sum = (currl1Node->val + flag) % 10;
+			if (currl1Node->val + flag >= 10)
+				flag = 1;
+			currl1Node->val = sum;
+			while (flag&& currl1Node != NULL)
+			{
+				currl1Node = currl1Node->next;
+				sum = (currl1Node->val + flag) % 10;
+				if (currl1Node->val + flag >= 10)
+					flag = 1;
+				currl1Node->val = sum;
+			}
+			if (flag)
+				break;
+			else
+				return ans;
+			
+		}
+		else if (currl2Node == NULL && currl1Node != NULL)  // 如果currl2Node到尾结点了
+		{
+			sum = (currl1Node->val + flag) % 10;
+			if (currl1Node->val + flag >= 10)
+				flag = 1;
+			currl1Node->val = sum;
+			while (flag && currl1Node != NULL)
+			{
+				currl1Node = currl1Node->next;
+				sum = (currl1Node->val + flag) % 10;
+				if (currl1Node->val + flag >= 10)
+					flag = 1;
+				currl1Node->val = sum;
+			}
+			if (flag)
+				break;
+			else
+				return ans;
+			
+		}
+		
+		else
+		{
+			sum = (currl1Node->val + currl2Node->val + flag) % 10;  // 对两个节点求和
+
+			if (currl1Node->val + currl2Node->val >= 10)  // 进位标志
+				flag = 1;
+			else
+				flag = 0;
+
+			currl1Node->val = sum;  // 更新节点值
+			// 更新节点
+			preNode = currl1Node;
+			currl1Node = currl1Node->next;
+			currl2Node = currl2Node->next;
+		}
+		
+	}
+	ListNode  *temp = NULL;
+	
+	if (l2 != NULL)
+	{
+		temp = l2;
+		temp->val = flag;
+		l2->next = NULL;
+	}
+	if (flag && preNode != NULL)
+	{
+		preNode->next = temp;
+	}
+	
+	return ans;
+}
+
+/*****************函数说明*************
+* 修改信息：
+* 实现思路：
+		几点说明：链表1是最后返回的链表，链表2是最后处理进位的链表，当节点为空但是运算没有结束的时候给空节点赋0值
+		1、如果两个当前节点均不为空，正常操作，这个是最简单的
+		2、如果链表1比链表2长，这个也比较简单，就把链表2的其他部分始终赋0值；
+		3、如果链表1比链表2短，交换两个指针的指向，也就是把链表2长的那部分链接到链表1后面，然后把链表2的当前指针赋NULL
+* 测试信息： 32ms， 57.22%
+
+
+**/
+ListNode* CLinkedList::addTwoNumbers2(ListNode* l1, ListNode* l2)
+{
+	ListNode* currl1Node = l1, * currl2Node = l2, * preNode = l1;
+	ListNode* ans = currl1Node;
+	ListNode* temp;
+	
+	ListNode* flagnode = l2;
+	// 相加
+	
+	int sum = 0;
+	int currl1 = 0, currl2 = 0;  // 分别表示链表1、2当前节点的值
+	int flag = 0;  // 进位标志
+	while (currl1Node != NULL || currl2Node != NULL)  // 两个节点都有值
+	{
+		if (currl1Node != NULL)
+			currl1 = currl1Node->val;
+		else if(currl2Node != NULL && preNode != NULL)
+		{
+			temp = currl2Node->next;  // 先保存链表2当前节点的下一个节点
+			currl1Node = currl2Node;			// 再把链表2的当前节点保存到链表1的当前节点，即两个指针现在指向链表2的同一个位置
+			preNode->next = currl1Node;  // 建立链表1与currl1Node（原链表1的当前节点），一定要有，否则，链表1是没有发生变化的，那么此时currl2Node就变成了链表1的尾结点
+			currl1Node->next = temp;  // 把此时链表1的尾结点的next指向之前保存下来的链表2的下一个节点
+			currl1 = currl1Node->val;  // 取值
+			currl2Node = NULL;  // 始终赋空
+		}
+
+		if (currl2Node != NULL)
+			currl2 = currl2Node->val;
+		else
+			currl2 = 0;
+		sum = (currl1 + currl2 + flag);  // 对两个节点求和
+		if (sum >= 10)  // 进位标志
+			flag = 1;
+		else
+			flag = 0;
+		if(currl1Node != NULL)
+			currl1Node->val = sum % 10;  // 插入节点
+		
+		// 更新节点
+		preNode = currl1Node;
+		if (currl1Node != NULL)
+			currl1Node = currl1Node->next;
+		if(currl2Node != NULL)
+			currl2Node = currl2Node->next;
+	}
+	if (flag && preNode != NULL)
+	{
+		flagnode->val = 1;
+		flagnode->next = NULL;
+		
+		preNode->next = flagnode;
+	}
+	
+	return ans;
+	
+}
