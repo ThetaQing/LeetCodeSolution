@@ -8,6 +8,13 @@ struct ListNode {
 	ListNode(int x) : val(x), next(NULL) {}
 };
 
+class Node {
+public:
+	int val;
+	Node* prev;
+	Node* next;
+	Node* child;
+};
 
 class CLinkedList
 {

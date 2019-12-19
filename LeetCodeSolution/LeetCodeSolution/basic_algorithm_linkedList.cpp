@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <set>
+#include <stack>
 #include "basic_algorithm_linkedList.h"
 using namespace std;
 
@@ -616,4 +617,94 @@ ListNode* CLinkedList::addTwoNumbers2(ListNode* l1, ListNode* l2)
 	
 	return ans;
 	
+}
+/***************函数说明**************
+* 函数名：Node* flatten(Node* head)
+* 函数参数：一个多级链表的头指针
+* 函数返回值：拉直后的链表头指针
+* 问题描述：
+	430. 扁平化多级双向链表
+	您将获得一个双向链表，除了下一个和前一个指针之外，它还有一个子指针，可能指向单独的双向链表。这些子列表可能有一个或多个自己的子项，依此类推，生成多级数据结构，如下面的示例所示。
+
+	扁平化列表，使所有结点出现在单级双链表中。您将获得列表第一级的头部。
+
+	来源：力扣（LeetCode）
+	链接：https://leetcode-cn.com/problems/flatten-a-multilevel-doubly-linked-list
+	著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+* 解决方案：
+		1、遍历第一级链表的所有节点
+			(1) 把该节点开始的所有子链表拉直
+			(2) 把该节点开始的所有子链表的尾结点与上一级链表相连接
+		2、更新第一级链表新的遍历节点
+
+		详细说明下第一步的两个小步：
+		拉直操作：
+		(1) 如果该节点的子指针不为空，说明有子链表，保存这个节点的next节点到栈中（因为栈是后进先出）
+		(2) 把该节点的子节点并入到该节点这一级链表中，即该节点的next指向子节点，子节点的pre指向当前节点，该节点子指针赋空，完成并入操作；
+		(3) 移动当前节点，重复(1)(2)直到完成第一级这个节点下的所有子链表的拉直操作，判断标准就是当前节点为空，此时不存在next节点后还有子链表的可能。
+		
+		完成拉直后就是利用栈的后进先出做连接，主要是将一个
+		(4) 先取出最近的上一级的next节点，将当期节点的前驱节点与上一级的next节点建立连接
+		(5) 寻找子链表的下一个空节点继续连接
+
+		对第一级的
+* 测试信息：8ms， 96.22%
+
+**/
+Node* flatten(Node* head) {
+	Node* preNode, * currNode, *nextNode, *childNode;
+	stack<Node*> nextNodeStack;
+	if (head == NULL)  // 节点为空
+		return head;
+
+	preNode = head;
+	currNode = head;
+	while (currNode != NULL)  // 只访问到currNode->next，只需要保证currNode != NULL
+	{
+		while (currNode != NULL)  // 该节点不是空节点的时候
+		{
+			while (currNode->child != NULL)  // 判断是都有子指针，如果有，追溯到最底层的节点
+			{
+				nextNode = currNode->next;  // 记录有子指针的这个节点的下一个节点
+				nextNodeStack.push(nextNode);  // 并存入栈中
+								
+				childNode = currNode->child;  // 暂存子节点
+				currNode->next = childNode;  // 当前节点的下一个节点变为它的子节点
+				childNode->prev = currNode;  // 子节点的前一个节点是当前节点
+				currNode->child = NULL;  // 当前节点的子节点设置为空
+				currNode = currNode->next;
+			}
+			
+			preNode = currNode;
+			currNode = currNode->next;
+		}
+		// 退出之后由第一级链表最开始的当前节点开始的所有的子节点都被拉直
+		while (!nextNodeStack.empty() && currNode == NULL)
+		{
+			nextNode = nextNodeStack.top();  // 提取最近的上一级
+			nextNodeStack.pop();
+
+			preNode->next = nextNode;
+			currNode = nextNode;
+			if (currNode != NULL)  // 如果该节点不是空节点，建立前驱连接
+			{
+				currNode->prev = preNode;  // 建立前驱连接
+				
+			}
+			while (currNode != NULL)  // 寻找下一个空节点（因为空节点就意味着这一条子链表走完了，可以对上一级建立连接）
+			{
+				preNode = currNode;  // 前一个节点的追踪，因为建立连接时，currNode是空指针
+				currNode = currNode->next;
+			}
+					
+		}
+		// 退出之后所有以第一级链表的当前节点开始的所有子节点全部和当前节点的下一个节点顺利连接
+		if (currNode != NULL)  // 开始第一级链表的下一个节点
+		{
+			preNode = currNode;
+			currNode = currNode->next;
+		}
+		
+	}		
+	return head;
 }
