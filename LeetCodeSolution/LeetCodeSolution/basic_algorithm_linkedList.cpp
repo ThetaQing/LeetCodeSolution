@@ -708,3 +708,27 @@ Node* flatten(Node* head) {
 	}		
 	return head;
 }
+
+NodeWithRandom* copyRandomList(NodeWithRandom* head) {
+
+	NodeWithRandom* currNode = head, * randomNode = head, * nextNode = head;
+	NodeWithRandom* copyNodeHead = head, * copyNode = copyNodeHead;
+	while (currNode != NULL)
+	{
+		deepCode(currNode, copyNode);
+		copyNode = copyNode->next;
+		currNode = currNode->next;
+	}
+}
+
+void deepCode(NodeWithRandom* oldNode, NodeWithRandom* newNode)
+{
+	*newNode = *oldNode;
+	if (oldNode != NULL)
+	{
+		newNode->next = new NodeWithRandom(oldNode->next->val);
+		// newNode->random = new NodeWithRandom(oldNode->random->val);  // random指针指向的不是一个新的节点
+	}
+	
+
+}
