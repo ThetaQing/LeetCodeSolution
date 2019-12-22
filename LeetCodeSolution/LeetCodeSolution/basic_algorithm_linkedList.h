@@ -40,6 +40,8 @@ public:
 	/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */
 	int get(int index) {
 		MyLinkedList* currNode = this;
+		if (this == NULL)
+			return -1;
 		while (index)
 		{
 			currNode = currNode->next;
@@ -104,6 +106,7 @@ public:
 	bool isPalindrome(ListNode* head);
 	ListNode* addTwoNumbers(ListNode* l1, ListNode* l2);
 	ListNode* addTwoNumbers2(ListNode* l1, ListNode* l2);
+	Node* flatten(Node* head);
 };
 
 

@@ -651,7 +651,7 @@ ListNode* CLinkedList::addTwoNumbers2(ListNode* l1, ListNode* l2)
 * 测试信息：8ms， 96.22%
 
 **/
-Node* flatten(Node* head) {
+Node* CLinkedList:: flatten(Node* head) {
 	Node* preNode, * currNode, *nextNode, *childNode;
 	stack<Node*> nextNodeStack;
 	if (head == NULL)  // 节点为空
@@ -708,27 +708,65 @@ Node* flatten(Node* head) {
 	}		
 	return head;
 }
-
+// 空间迭代
 NodeWithRandom* copyRandomList(NodeWithRandom* head) {
 
 	NodeWithRandom* currNode = head, * randomNode = head, * nextNode = head;
-	NodeWithRandom* copyNodeHead = head, * copyNode = copyNodeHead;
+	NodeWithRandom* copyNodeHead = head, *copyNode = head;
+	if (head == NULL)
+	{
+		NodeWithRandom* newNode = NULL;
+		return newNode;
+	}
+
+	// 第一步，拷贝节点到每个节点的下一个节点位置
 	while (currNode != NULL)
 	{
-		deepCode(currNode, copyNode);
-		copyNode = copyNode->next;
-		currNode = currNode->next;
-	}
-}
+		NodeWithRandom* newNode = new NodeWithRandom(currNode->val);  // 构建一个节点，该节点的值是当前节点的值，random指针为空
+		nextNode = currNode->next;
+		currNode->next = newNode;
+		newNode->next = nextNode;  // 把新节点插入到当前节点的后面
 
-void deepCode(NodeWithRandom* oldNode, NodeWithRandom* newNode)
-{
-	*newNode = *oldNode;
-	if (oldNode != NULL)
+		currNode = nextNode;  // 更新当前节点
+	}
+
+	// 第二步，建立新节点之间的random指针关系
+	currNode = head;
+	while (currNode != NULL && currNode->next != NULL)
 	{
-		newNode->next = new NodeWithRandom(oldNode->next->val);
-		// newNode->random = new NodeWithRandom(oldNode->random->val);  // random指针指向的不是一个新的节点
+		nextNode = currNode->next;
+		randomNode = currNode->random;
+
+		// 新节点始终在原节点的后面，所以如果原节点的random指针存在，那么新节点的random指针就应该指向原节点的random指针的下一个节点
+		nextNode->random = randomNode == NULL ? NULL : randomNode->next;
+		// 更新节点
+		currNode = nextNode->next;
 	}
-	
+	 // 第三步，拆分链表
+	currNode = head;
+	if(currNode != NULL)
+		copyNodeHead = currNode->next;	
+	NodeWithRandom* nextCopyNode;
+	while (currNode != NULL  && currNode->next != NULL && currNode->next->next != NULL)
+	{
+		// 暂存节点
+		copyNode = currNode->next;
+		nextNode = copyNode->next;
+		nextCopyNode = nextNode->next;
+		// 建立新的链接
+		currNode->next = nextNode;
+		copyNode->next = nextCopyNode;
+
+		// 更新节点
+		currNode = nextNode;
+		
+
+	}
+	// 退出之后还有最后两个节点
+	currNode->next = NULL;
+
+	return copyNodeHead;
+
 
 }
+
