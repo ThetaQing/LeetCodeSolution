@@ -34,7 +34,7 @@ https://leetcode-cn.com/explore/learn/card/data-structure-binary-tree/2/traverse
 * 测试信息：4ms
 **/
 // 前序遍历，先访问根节点，再访问左节点，最后右节点
-vector<int>CBinaryTree::preorderTraversal(TreeNode* root) {
+vector<int> CBinaryTree::preorderTraversal(TreeNode* root) {
 
 	vector<int> ans;
 	if (root == NULL)
@@ -88,5 +88,29 @@ vector<int>CBinaryTree::preorderTraversal(TreeNode* root) {
 	}
 	return ans;
 
+
+}
+
+vector<int> CBinaryTree::preorderTraversal2(TreeNode* root) {
+	// static vector<int> ans;  // 测试的时候静态变量不行，然而我还没有搞清楚为什么,定义在类里面是没问题的
+	if (root == NULL)
+		return ans;
+	ans.push_back(root->val);
+	preorderTraversal(root->left);
+	preorderTraversal(root->right);
+
+}
+// 中序遍历，先左节点，再根节点，后右节点
+vector<int> CBinaryTree::inorderTraversal(TreeNode* root) {
+	if (root == NULL)
+		return ans;
+	// 先左节点
+	inorderTraversal(root->left);
+	// 再根节点
+	ans.push_back(root->val);
+	// 最后右节点
+	inorderTraversal(root->right);
+
+	return ans;
 
 }

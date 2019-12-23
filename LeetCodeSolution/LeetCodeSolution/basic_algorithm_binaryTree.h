@@ -1,6 +1,7 @@
 #ifndef __basic_algorithm_binaryTree_
 #define __basic_algorithm_binaryTree_
 #include <iostream>
+#include <vector>
 using namespace std;
 struct TreeNode {
 	int val;
@@ -13,7 +14,12 @@ struct TreeNode {
 class CBinaryTree
 {
 public:
-	vector<int> preorderTraversal(TreeNode* root);
+
+	std::vector<int> preorderTraversal(TreeNode* root);  // µü´ú
+	std::vector<int> preorderTraversal2(TreeNode* root);  // µÝ¹é
+	std::vector<int> inorderTraversal(TreeNode* root);
+private:
+	std::vector<int> ans;
 };
 #endif // !__basic_algorithm_binaryTree_
 
