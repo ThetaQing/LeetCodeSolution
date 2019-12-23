@@ -19,6 +19,7 @@ public:
 	std::vector<int> preorderTraversalRefer(TreeNode* root);  // µü´ú
 	std::vector<int> preorderTraversal2(TreeNode* root);  // µÝ¹é
 	std::vector<int> inorderTraversal(TreeNode* root);
+	std::vector<int> inorderTraversalRefer(TreeNode* root);
 	std::vector<int> inorderTraversal2(TreeNode* root);
 private:
 	std::vector<int> ans;

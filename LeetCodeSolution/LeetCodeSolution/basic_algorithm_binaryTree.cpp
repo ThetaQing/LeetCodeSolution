@@ -170,16 +170,43 @@ vector<int> CBinaryTree:: inorderTraversal(TreeNode* root)  // 迭代
 				if (!rootStack.empty())  // 不存在右节点，即当前节点是叶子节点，如果此时还有没有完成遍历的左节点，出栈
 				{
 					currNode = rootStack.top();
-					rootStack.pop();					
+					rootStack.pop();  // pop出来的是有左节点的根节点					
 					currNode->left = NULL;
-				}  // 因为左边已经遍历完了
+				}  // 左节点已经处理完了，所以要赋空
 				else
 					break;
 			}
 		}
 	}
 	return ans;
-	// 退出循环后就是左节点的最后一个叶子节点
+
+}
+vector<int> CBinaryTree::inorderTraversalRefer(TreeNode* root)
+{
+	stack<TreeNode*> rootStack;
+	TreeNode* currNode = root;
+
+
+	while (currNode != NULL || !rootStack.empty())
+	{
+		while (currNode != NULL)  // 如果当前节点存在左节点，将当前节点入栈，指针移向它的左节点
+		{
+			rootStack.push(currNode);
+			currNode = currNode->left;
+		}
+		
+		
+		// 该左节点的根节点
+		currNode = rootStack.top();
+		rootStack.pop();
+		ans.push_back(currNode->val);
+
+		// 开始遍历该节点的右节点
+		currNode = currNode->right;  // 此时的节点是新的右节点
+
+	
+	}
+	return ans;
 }
 // 中序遍历，先左节点，再根节点，后右节点
 vector<int> CBinaryTree::inorderTraversal2(TreeNode* root) {
