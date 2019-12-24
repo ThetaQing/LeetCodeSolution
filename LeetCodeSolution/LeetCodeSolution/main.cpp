@@ -6,6 +6,7 @@
 #include <vector>
 #include "basic_algorithm_linkedList.h"
 #include "basic_algorithm_string.h"
+#include "basic_algorithm_binaryTree.h"
 using namespace std;
 
 using namespace std;
@@ -44,20 +45,13 @@ int int2bit(int n)
 
 int main()
 {
-	CString myClass;
-	ListNode head(1), headNext(2), *ans(0);
-	CLinkedList myLinkedList;
-	head.val = 1;
-	headNext.val = 2;
-	head.next = &headNext;
-	ans = myLinkedList.reverseList(&head);
-	string s = "1211";
-	vector<string> vec = { "flower","flow","flight" };
-	string re= myClass.longestCommonPrefix(vec);
-
-	for (auto i : re)
-		cout << i << endl;
-		
+	TreeNode root(1), Node2(2), Node3(3);
+	vector<int> result;
+	root.left = NULL;
+	root.right = &Node2;
+	Node2.left = &Node3;
+	CBinaryTree myTree;
+	result = myTree.postorderTraversal(&root);
 	std::system("pause");
 	return 0;
 }

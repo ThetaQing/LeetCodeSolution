@@ -222,3 +222,49 @@ vector<int> CBinaryTree::inorderTraversal2(TreeNode* root) {
 	return ans;
 
 }
+// 后序遍历 迭代 未完成
+vector<int> CBinaryTree::postorderTraversal(TreeNode* root) {
+	TreeNode* currNode = root,*tempNode = root;
+	stack<TreeNode*> rootStack;
+	while (currNode != NULL || !rootStack.empty())
+	{
+		while (currNode != NULL)
+		{			
+			rootStack.push(currNode);
+			currNode = currNode->left;
+		}  // 所有非空左节点都入栈
+		if (!rootStack.empty())
+		{
+			currNode = rootStack.top();
+			currNode->left = NULL;
+			if (currNode->right == NULL)
+			{
+				ans.push_back(currNode->val);
+				rootStack.pop();
+				if (!rootStack.empty())
+				{
+					currNode = rootStack.top();
+					tempNode = currNode->right;
+					currNode->right = NULL;
+					currNode = tempNode;
+				}
+			}
+			else
+			{
+				currNode = currNode->right;
+			}
+		}
+			
+	}	   	 
+	return ans;
+}
+
+// 后序遍历 递归
+vector<int> CBinaryTree::postorderTraversal2(TreeNode* root) {
+	if (root == NULL)
+		return ans;
+	postorderTraversal2(root->left);
+	postorderTraversal2(root->right);
+	ans.push_back(root->val);
+	return ans;
+}

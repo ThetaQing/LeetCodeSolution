@@ -21,6 +21,9 @@ public:
 	std::vector<int> inorderTraversal(TreeNode* root);
 	std::vector<int> inorderTraversalRefer(TreeNode* root);
 	std::vector<int> inorderTraversal2(TreeNode* root);
+
+	std::vector<int> postorderTraversal(TreeNode* root);
+	std::vector<int> postorderTraversal2(TreeNode* root);
 private:
 	std::vector<int> ans;
 };
