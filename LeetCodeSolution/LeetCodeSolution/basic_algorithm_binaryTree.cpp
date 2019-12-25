@@ -222,37 +222,46 @@ vector<int> CBinaryTree::inorderTraversal2(TreeNode* root) {
 	return ans;
 
 }
-// 后序遍历 迭代 未完成
+// 后序遍历 迭代 完成
+/*************函数说明*******************
+* 1、入栈，保证退出循环的时候是空节点，且栈顶元素一定是叶子节点
+* 2、出栈，栈顶元素一定是叶子节点，出栈并入队
+* 3、更新节点，取下一个栈顶节点，如果刚刚入队的节点是这个节点的左\右节点，将这个节点的左\右节点赋NULL（避免陷入push-pop循环）
+*	 最后将当前节点更新为它的右孩子
+
+***/
 vector<int> CBinaryTree::postorderTraversal(TreeNode* root) {
 	TreeNode* currNode = root,*tempNode = root;
 	stack<TreeNode*> rootStack;
 	while (currNode != NULL || !rootStack.empty())
 	{
 		while (currNode != NULL)
-		{			
+		{
 			rootStack.push(currNode);
-			currNode = currNode->left;
-		}  // 所有非空左节点都入栈
+			if (currNode->left != NULL)
+				currNode = currNode->left;
+			else
+				currNode = currNode->right;
+		}
+		// 退出循环的这个点为NULL，且栈顶元素为叶子节点
 		if (!rootStack.empty())
 		{
 			currNode = rootStack.top();
-			currNode->left = NULL;
-			if (currNode->right == NULL)
+			rootStack.pop();
+			ans.push_back(currNode->val);
+			if (!rootStack.empty())
 			{
-				ans.push_back(currNode->val);
-				rootStack.pop();
-				if (!rootStack.empty())
-				{
-					currNode = rootStack.top();
-					tempNode = currNode->right;
+				tempNode = currNode;
+				currNode = rootStack.top();
+				//currNode = currNode->right;
+				if (tempNode == currNode->left)
+					currNode->left = NULL;
+				else if (tempNode == currNode->right)
 					currNode->right = NULL;
-					currNode = tempNode;
-				}
+				
 			}
-			else
-			{
-				currNode = currNode->right;
-			}
+			currNode = currNode->right;
+
 		}
 			
 	}	   	 
