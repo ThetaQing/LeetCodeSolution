@@ -24,8 +24,10 @@ public:
 
 	std::vector<int> postorderTraversal(TreeNode* root);
 	std::vector<int> postorderTraversal2(TreeNode* root);
+	vector<vector<int>> levelOrder(TreeNode* root);
 private:
 	std::vector<int> ans;
+	std::vector<std::vector<int>> levelAns;
 };
 #endif // !__basic_algorithm_binaryTree_
 

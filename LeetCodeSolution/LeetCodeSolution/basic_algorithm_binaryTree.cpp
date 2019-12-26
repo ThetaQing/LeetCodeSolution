@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <stack>
+#include <queue>
 using namespace std;
 /************文件说明***************
 * 文件名：basic_algorithm_binaryTree.cpp
@@ -276,4 +277,59 @@ vector<int> CBinaryTree::postorderTraversal2(TreeNode* root) {
 	postorderTraversal2(root->right);
 	ans.push_back(root->val);
 	return ans;
+}
+
+// 层序遍历
+/******************函数说明**************
+* 实现方案：迭代
+		使用两个队列来回切换，一个用于当前层的节点遍历，另一个用于下一层的存储，每次遍历都把队全部遍历完变成空队
+		1、从根节点开始，只要当前层还有没有遍历的节点，就继续遍历，并存储节点值，将该节点的左右节点从左往右入队到childQueue中
+		2、当前层遍历完成后，如果该层结果向量不为空，将该向量加入到结果向量中，清空临时向量，准备下一层的遍历
+		3、开始遍历下一层，按照刚刚入队的顺序从左往右出队，并重复步骤1，只是将队列换成currQueue（即对调两个队）
+* 测试信息：12ms，42.55%
+**/
+vector<vector<int>> CBinaryTree::levelOrder(TreeNode* root) {
+
+	TreeNode* currNode = root;
+	queue<TreeNode*> childQueue;  // 存储当前节点的子节点
+	queue<TreeNode*> currQueue;  // 存储当前遍历的层
+	currQueue.push(currNode);
+	while (currNode != NULL &&(!currQueue.empty() || !childQueue.empty()))
+	{
+		// 此时childStack为空队
+		while(!currQueue.empty())
+		{
+			currNode = currQueue.front();
+			currQueue.pop();
+			ans.push_back(currNode->val);  // 当前根节点
+			if (currNode->left != NULL)
+				childQueue.push(currNode->left);
+			if (currNode->right != NULL)
+				childQueue.push(currNode->right);
+			
+		}
+		if (!ans.empty())
+			levelAns.push_back(ans);
+		ans.clear();  // 清空，开始下一层
+		// 此时currQueue为空队
+		while (!childQueue.empty())
+		{
+			currNode = childQueue.front();
+			childQueue.pop();
+			ans.push_back(currNode->val);
+			if (currNode->left != NULL)
+				currQueue.push(currNode->left);
+			if (currNode->right != NULL)
+				currQueue.push(currNode->right);
+			
+
+		}
+		if (!ans.empty())
+			levelAns.push_back(ans);
+		ans.clear();  // 清空，开始下一层
+
+
+	}
+
+	return levelAns;
 }
