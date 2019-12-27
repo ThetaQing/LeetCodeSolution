@@ -286,6 +286,16 @@ vector<int> CBinaryTree::postorderTraversal2(TreeNode* root) {
 		1、从根节点开始，只要当前层还有没有遍历的节点，就继续遍历，并存储节点值，将该节点的左右节点从左往右入队到childQueue中
 		2、当前层遍历完成后，如果该层结果向量不为空，将该向量加入到结果向量中，清空临时向量，准备下一层的遍历
 		3、开始遍历下一层，按照刚刚入队的顺序从左往右出队，并重复步骤1，只是将队列换成currQueue（即对调两个队）
+
+		迭代：更简化的方法
+			也是利用队列，只使用一个队，根据队列的容量决定出队的元素个数以此完成交接
+
+		递归：借助数的高度，返回列表的长度表示当前层的高度，如levelAns.size() = 1,表示当前层是第一层，levelAns[0]就表示第一层的节点
+			1、当根节点为空，直接返回；
+			2、如果当前层的高度大于返回列表的长度，为返回列表新添一个元素为下一次递归遍历其子节点；
+			3、取出当前层的列表，为该列表添加该节点的元素值；
+			4、遍历该节点的左右节点。
+		递归的关键是运用了vector的随机存储性质，可以取出第level个表。
 * 测试信息：12ms，42.55%
 **/
 vector<vector<int>> CBinaryTree::levelOrder(TreeNode* root) {
@@ -330,6 +340,36 @@ vector<vector<int>> CBinaryTree::levelOrder(TreeNode* root) {
 
 
 	}
+
+	return levelAns;
+}
+
+// 递归实现
+vector<vector<int>> CBinaryTree::levelOrder2(TreeNode* root)
+{
+	TreeNode* currNode = root;
+	int level = 0;
+	if (currNode == NULL)
+		return levelAns;
+	levelHelper(currNode, level);
+	return levelAns;
+}
+
+vector<vector<int>> CBinaryTree::levelHelper(TreeNode* root, int level)  // 当前根节点所在的层数
+{
+	if (root == NULL)
+		return levelAns;  // 如果为空直接返回
+	if (levelAns.size() == level)
+	{
+		vector<int>* newVec = new vector<int>();    // 如果当前层（因为是从0开始，所以判断条件是=）大于当年返回列表的长度，给列表添加一个元素
+		levelAns.push_back(*newVec);
+	}
+	// 不能用临时变量代替levelAns[level]，temp仅仅是一个变量，不是指向levelAns[level]的指针
+	levelAns[level].push_back(root->val);  // 取出当前层对应的表，为表添加元素
+
+
+	levelHelper(root->left, level + 1);  // 从左往右开始遍历
+	levelHelper(root->right, level + 1);
 
 	return levelAns;
 }

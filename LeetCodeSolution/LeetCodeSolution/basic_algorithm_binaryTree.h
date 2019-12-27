@@ -24,7 +24,9 @@ public:
 
 	std::vector<int> postorderTraversal(TreeNode* root);
 	std::vector<int> postorderTraversal2(TreeNode* root);
-	vector<vector<int>> levelOrder(TreeNode* root);
+	std::vector<std::vector<int>> levelOrder(TreeNode* root);
+	std::vector<std::vector<int>> levelOrder2(TreeNode* root);
+	std::vector<std::vector<int>> levelHelper(TreeNode* root, int level);
 private:
 	std::vector<int> ans;
 	std::vector<std::vector<int>> levelAns;
