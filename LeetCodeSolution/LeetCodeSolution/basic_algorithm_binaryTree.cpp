@@ -1,6 +1,7 @@
 #include "basic_algorithm_binaryTree.h"
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <stack>
 #include <queue>
 using namespace std;
@@ -130,8 +131,8 @@ vector<int> CBinaryTree::preorderTraversal2(TreeNode* root) {
 	if (root == NULL)
 		return ans;
 	ans.push_back(root->val);
-	preorderTraversal(root->left);
-	preorderTraversal(root->right);
+	preorderTraversal2(root->left);
+	preorderTraversal2(root->right);
 
 }
 /*****************函数说明*******************
@@ -225,14 +226,18 @@ vector<int> CBinaryTree::inorderTraversal2(TreeNode* root) {
 }
 // 后序遍历 迭代 完成
 /*************函数说明*******************
-* 1、入栈，保证退出循环的时候是空节点，且栈顶元素一定是叶子节点
-* 2、出栈，栈顶元素一定是叶子节点，出栈并入队
-* 3、更新节点，取下一个栈顶节点，如果刚刚入队的节点是这个节点的左\右节点，将这个节点的左\右节点赋NULL（避免陷入push-pop循环）
-*	 最后将当前节点更新为它的右孩子
+* 解决方案：迭代
+				* 1、入栈，保证退出循环的时候是空节点，且栈顶元素一定是叶子节点
+				* 2、出栈，栈顶元素一定是叶子节点，出栈并入队
+				* 3、更新节点，取下一个栈顶节点，如果刚刚入队的节点是这个节点的左\右节点，将这个节点的左\右节点赋NULL（避免陷入push-pop循环）
+				*	 最后将当前节点更新为它的右孩子
+			迭代（参考网络）
+				1、从根节点开始依次迭代，弹出栈顶元素输出到输出列表中；
+				2、依次压入他的所有孩子节点，按照从上到下、从左至右的顺序依次压入栈中。（因为后序遍历的顺序是从下到上、从左至右）然后将输出列表逆向输出
 
 ***/
 vector<int> CBinaryTree::postorderTraversal(TreeNode* root) {
-	TreeNode* currNode = root,*tempNode = root;
+	TreeNode* currNode = root,*preNode = root;
 	stack<TreeNode*> rootStack;
 	while (currNode != NULL || !rootStack.empty())
 	{
@@ -249,26 +254,47 @@ vector<int> CBinaryTree::postorderTraversal(TreeNode* root) {
 		{
 			currNode = rootStack.top();
 			rootStack.pop();
-			ans.push_back(currNode->val);
+			ans.push_back(currNode->val);  // 对栈顶叶子节点出栈
 			if (!rootStack.empty())
 			{
-				tempNode = currNode;
+				preNode = currNode;
 				currNode = rootStack.top();
-				//currNode = currNode->right;
-				if (tempNode == currNode->left)
+				// 制造新的叶子节点，删除已经遍历的节点
+				if (preNode == currNode->left)  
 					currNode->left = NULL;
-				else if (tempNode == currNode->right)
+				else if (preNode == currNode->right)
 					currNode->right = NULL;
 				
 			}
-			currNode = currNode->right;
+			currNode = currNode->right;  // 更新节点
 
 		}
 			
 	}	   	 
 	return ans;
 }
+vector<int> CBinaryTree::postorderTraversalRefer(TreeNode* root)
+{
+	TreeNode* currNode = root, * tempNode = root;
+	stack<TreeNode*> rootStack;	
+	if (currNode == NULL)  // 如果为空，直接返回
+		return ans;
 
+	rootStack.push(currNode);
+	while (!rootStack.empty())
+	{
+		currNode = rootStack.top();  // 先根节点
+		rootStack.pop();
+		ans.push_back(currNode->val);
+
+		if (currNode->left != NULL)  // 最后左节点（后出栈）
+			rootStack.push(currNode->left);
+		if (currNode->right != NULL)  // 再右节点
+			rootStack.push(currNode->right);
+	}
+	reverse(ans.begin(), ans.end());  // 逆序输出
+	return ans;
+}
 // 后序遍历 递归
 vector<int> CBinaryTree::postorderTraversal2(TreeNode* root) {
 	if (root == NULL)
