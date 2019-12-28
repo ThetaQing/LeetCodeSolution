@@ -30,6 +30,12 @@
     <ClCompile Include="basic_algorithm_linkedList.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="basic_algorithm_sortFind.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="basic_algorithm_binaryTree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="solution.h">
@@ -44,5 +50,13 @@
     <ClInclude Include="basic_algorithm_linkedList.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="basic_algorithm_binaryTree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.md">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

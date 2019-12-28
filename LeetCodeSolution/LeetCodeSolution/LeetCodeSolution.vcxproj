@@ -124,16 +124,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="basic_algorithm_array.cpp" />
+    <ClCompile Include="basic_algorithm_binaryTree.cpp" />
     <ClCompile Include="basic_algorithm_linkedList.cpp" />
+    <ClCompile Include="basic_algorithm_sortFind.cpp" />
     <ClCompile Include="basic_algorithm_string.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="solution.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basic_algorithm_array.h" />
+    <ClInclude Include="basic_algorithm_binaryTree.h" />
     <ClInclude Include="basic_algorithm_linkedList.h" />
     <ClInclude Include="basic_algorithm_string.h" />
     <ClInclude Include="solution.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
