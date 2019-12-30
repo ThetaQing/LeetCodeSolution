@@ -30,9 +30,19 @@ public:
 	std::vector<std::vector<int>> levelOrder(TreeNode* root);  // 迭代
 	std::vector<std::vector<int>> levelOrder2(TreeNode* root);  // 递归
 	std::vector<std::vector<int>> levelHelper(TreeNode* root, int level);  // 递归辅助函数
+
+	// 求数的深度
+	int maxDepth(TreeNode* root);
+	// 用递归解决问题
+	int topDown(TreeNode* root, int depth);
+	int bottomUp(TreeNode* root);
+	// 迭代
+	int iteration(TreeNode* root);
 private:
 	std::vector<int> ans;
 	std::vector<std::vector<int>> levelAns;
+	int maxdepth=0;
+	
 };
 #endif // !__basic_algorithm_binaryTree_
 

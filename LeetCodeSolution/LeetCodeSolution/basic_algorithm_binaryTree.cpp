@@ -12,6 +12,23 @@ https://leetcode-cn.com/explore/learn/card/data-structure-binary-tree/2/traverse
 
 
 **/
+
+
+
+/*********************************************
+
+==============================================
+
+树的遍历：
+		前序遍历、中序遍历、后序遍历的迭代、递归实现
+
+==============================================
+
+
+**/
+
+
+
 /*****************函数说明****************
 * 函数名： vector<int> preorderTraversal(TreeNode* root)
 * 函数参数：TreeNode的根节点
@@ -398,4 +415,130 @@ vector<vector<int>> CBinaryTree::levelHelper(TreeNode* root, int level)  // 当前
 	levelHelper(root->right, level + 1);
 
 	return levelAns;
+}
+
+/*********************************************
+
+==============================================
+
+运用递归解决问题
+		自顶向下：在每个递归层级，我们将首先访问节点来计算一些值，并在递归调用函数时将这些值传递到子节点，可以被认为是一种前序遍历。
+		自底向上：在递归层次上，我们首先对所有子节点递归地调用函数，然后根据返回值和根节点本身的值得到答案，可以被认为是一种后序遍历。
+
+==============================================
+
+
+**/
+
+
+/*****************函数说明********************
+* 函数名：int maxDepth(TreeNode* root)
+* 函数参数：树的根节点
+* 函数返回值：返回这棵树的深度
+* 实现方案：
+
+
+**/
+
+
+int CBinaryTree::maxDepth(TreeNode* root)
+{
+	if (!root)  // 如果根节点为空
+		return maxdepth;
+	
+	// maxdepth = topDown(root, 1);
+	maxdepth = bottomUp(root);
+	return maxdepth;
+}
+// 自顶向下
+// 20ms，17.38
+int CBinaryTree::topDown(TreeNode* root, int depth)
+{
+	if (!root)  // 如果根节点为空
+		return depth;
+	int leftDepth = 0, rightDepth = 0;
+	leftDepth = topDown(root->left, depth + 1);  // 不为空的时候深度加1
+	rightDepth = topDown(root->right, depth + 1);  
+
+	return max(leftDepth, rightDepth);
+
+}
+// 自底向上
+// 20ms， 17.38%
+int CBinaryTree::bottomUp(TreeNode* root)
+{
+	if (!root)
+		return 0;
+	int leftDepth = 0, rightDepth = 0;
+
+	leftDepth = bottomUp(root->left) + 1;  // 每返回一次 + 1
+	rightDepth = bottomUp(root->right) + 1;
+
+	return max(leftDepth, rightDepth);
+}
+
+// 迭代 未完成
+int CBinaryTree::iteration(TreeNode * root)
+{
+	int depth = 0;
+	TreeNode* currNode = root;
+
+	if (currNode == NULL)
+		return 0;
+
+	stack<TreeNode*> nodeStack;
+	nodeStack.push(currNode);  // 当前节点入栈
+	while (!nodeStack.empty())
+	{
+		currNode = nodeStack.top();
+		nodeStack.pop();
+		depth += 1;
+		if (currNode->right != NULL)
+		{
+			nodeStack.push(currNode->right);
+		}
+		if (currNode->left != NULL)
+		{
+			nodeStack.push(currNode->left);
+		}
+		maxdepth = max(depth, maxdepth);
+	}
+	return maxdepth;
+	
+
+}
+// 未完成
+int maxDepth(TreeNode* root) {
+	int depth = 0 , maxdepth;
+	TreeNode* currNode = root;
+	stack<TreeNode*> nodeStack;
+	while (currNode != NULL || !nodeStack.empty())
+	{
+		while (currNode != NULL)
+		{
+			depth += 1;
+			nodeStack.push(currNode);  // 当前节点入栈
+			currNode = currNode->left;
+
+		}
+		maxdepth = max(depth, maxdepth);
+		if (!nodeStack.empty())  // 如果栈不为空
+		{
+			// 出栈
+			currNode = nodeStack.top();
+			nodeStack.pop();
+			// depth -= 1;
+			if (!nodeStack.empty())
+			{
+				// 出栈
+				currNode = nodeStack.top();
+				nodeStack.pop();
+				//depth -= 1;				
+			}
+			// 更新为右节点
+			currNode = currNode->right;
+		}
+	}
+	return maxdepth;
+
 }
