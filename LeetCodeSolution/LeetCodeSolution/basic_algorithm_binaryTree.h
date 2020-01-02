@@ -34,10 +34,13 @@ public:
 	// 求数的深度
 	int maxDepth(TreeNode* root);
 	// 用递归解决问题
-	int topDown(TreeNode* root, int depth);
-	int bottomUp(TreeNode* root);
+	int topDown(TreeNode* root, int depth);  // 自顶向下
+	int bottomUp(TreeNode* root);  // 自底向上
+	int maxDepthLevel(TreeNode* root);  // 层序遍历
+
 	// 迭代
-	int iteration(TreeNode* root);
+	int maxDepthIteration(TreeNode* root);	
+	int maxDepthIterationRefer(TreeNode* root);
 private:
 	std::vector<int> ans;
 	std::vector<std::vector<int>> levelAns;

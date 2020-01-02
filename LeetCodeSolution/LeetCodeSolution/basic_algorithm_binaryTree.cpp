@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <stack>
 #include <queue>
+
 using namespace std;
 /************文件说明***************
 * 文件名：basic_algorithm_binaryTree.cpp
@@ -477,47 +478,41 @@ int CBinaryTree::bottomUp(TreeNode* root)
 	return max(leftDepth, rightDepth);
 }
 
-// 迭代 未完成
-int CBinaryTree::iteration(TreeNode * root)
+// 层序遍历（超级慢，2428s）
+int CBinaryTree::maxDepthLevel(TreeNode * root)
 {
-	int depth = 0;
-	TreeNode* currNode = root;
-
-	if (currNode == NULL)
-		return 0;
-
-	stack<TreeNode*> nodeStack;
-	nodeStack.push(currNode);  // 当前节点入栈
-	while (!nodeStack.empty())
-	{
-		currNode = nodeStack.top();
-		nodeStack.pop();
-		depth += 1;
-		if (currNode->right != NULL)
-		{
-			nodeStack.push(currNode->right);
-		}
-		if (currNode->left != NULL)
-		{
-			nodeStack.push(currNode->left);
-		}
-		maxdepth = max(depth, maxdepth);
-	}
+	vector<vector<int>>ans = levelHelper(root, 0);
+	maxdepth = ans.size();
+	
 	return maxdepth;
 	
 
 }
-// 未完成
-int maxDepth(TreeNode* root) {
-	int depth = 0 , maxdepth;
+/***************************
+
+
+* 解决方案：
+	参考答案的数对思想
+	还是有点麻烦
+	其实和前序遍历自己实现的时候思想一致，把每个节点的所有左节点都压栈，然后再出栈，出栈的时候考虑再压右节点，没有右节点继续出栈
+* 测试信息：
+执行用时 :12 ms, 在所有 C++ 提交中击败了73.50%的用户
+内存消耗 :19 MB, 在所有 C++ 提交中击败了89.72%的用户
+
+***/
+int CBinaryTree::maxDepthIteration(TreeNode* root) {
+	int depth = 0;
 	TreeNode* currNode = root;
-	stack<TreeNode*> nodeStack;
+	stack<pair<TreeNode*,int>>nodeStack;
+	pair<TreeNode*, int> nodePair;
 	while (currNode != NULL || !nodeStack.empty())
 	{
 		while (currNode != NULL)
 		{
 			depth += 1;
-			nodeStack.push(currNode);  // 当前节点入栈
+			nodePair.first = currNode;
+			nodePair.second = depth;
+			nodeStack.push(nodePair);  // 当前节点入栈
 			currNode = currNode->left;
 
 		}
@@ -525,20 +520,60 @@ int maxDepth(TreeNode* root) {
 		if (!nodeStack.empty())  // 如果栈不为空
 		{
 			// 出栈
-			currNode = nodeStack.top();
+			currNode = nodeStack.top().first;			
+			depth = nodeStack.top().second;
 			nodeStack.pop();
-			// depth -= 1;
-			if (!nodeStack.empty())
+			if(currNode->right)
+				currNode = currNode->right;
+			else if (!nodeStack.empty())
 			{
 				// 出栈
-				currNode = nodeStack.top();
+				currNode = nodeStack.top().first;
+				depth = nodeStack.top().second;
 				nodeStack.pop();
-				//depth -= 1;				
+				
+				// 更新为右节点
+				currNode = currNode->right;
 			}
+			else
 			// 更新为右节点
 			currNode = currNode->right;
 		}
 	}
 	return maxdepth;
 
+}
+// 执行用时 :12 ms, 在所有 C++ 提交中击败了73.50 %的用户
+// 内存消耗 :19.2 MB, 在所有 C++ 提交中击败了69.52 %的用户
+// 复现网络，实质上是前序遍历的思想，出根节点压子节点
+int CBinaryTree::maxDepthIterationRefer(TreeNode* root)
+{
+	int depth = 0;
+	TreeNode* currNode = root;
+	stack<pair<TreeNode*, int>>nodeStack;  // 定义元素是数对的栈
+	pair<TreeNode*, int> nodePair;  // 定义数对，第一个元素是树的节点，第二个元素是该节点的值
+	if (root == NULL)
+		return 0;
+	// 如果不为空树的话，从根节点开始出栈，出栈的同时将左右非空节点都压栈
+	nodePair.first = currNode;
+	nodePair.second = 1;
+	nodeStack.push(nodePair);
+	while (!nodeStack.empty())
+	{
+		// 取出栈顶元素
+		nodePair = nodeStack.top();
+		nodeStack.pop();
+		depth = nodePair.second;
+		currNode = nodePair.first;
+
+		// 比较深度信息，取最大值
+		maxdepth = max(maxdepth, depth);  
+
+		// 对左右非空节点压栈
+		if(currNode->left)
+			nodeStack.push(make_pair(currNode->left, depth + 1));
+		if(currNode->right)
+			nodeStack.push(pair<TreeNode*, int>(currNode->right, depth + 1));
+	}
+	return maxdepth;
 }
