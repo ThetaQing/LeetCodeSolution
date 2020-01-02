@@ -437,6 +437,9 @@ vector<vector<int>> CBinaryTree::levelHelper(TreeNode* root, int level)  // 当前
 * 函数参数：树的根节点
 * 函数返回值：返回这棵树的深度
 * 实现方案：
+		1、递归
+		2、迭代
+
 
 
 **/
@@ -576,4 +579,89 @@ int CBinaryTree::maxDepthIterationRefer(TreeNode* root)
 			nodeStack.push(pair<TreeNode*, int>(currNode->right, depth + 1));
 	}
 	return maxdepth;
+}
+
+/**********************函数说明******************
+* 函数名：
+* 函数参数：
+* 函数返回值：
+* 问题描述：给定一个二叉树，检查它是否是镜像对称的。
+* 实现方案：
+		1、迭代
+			用数对，前序遍历的思想，从根节点开始，出栈一个数对，压入两个非空数对（分别是左节点的左节点与右节点的右节点，左节点的右节点与右节点的左节点）
+			判断出栈的这个数对两个节点的值是否相等
+		2、递归
+			判断两个节点是否相等
+			递归结束条件：两个节点都为空或者一个为空一个不为空
+			否则的话，继续判断左节点的左节点是否等于右节点的右节点，并且左节点的右节点等于右节点的左节点
+* 测试信息：
+	12ms， 26.58%
+***/
+bool CBinaryTree::isSymmetricIteration(TreeNode* root) {
+
+	if (root == NULL)
+		return 1;
+	stack<pair<TreeNode*, TreeNode*>> nodeStack;
+
+	TreeNode* currNode = root;
+	
+	TreeNode* leftNode = root->left, *rightNode = root->right;
+
+	pair<TreeNode*, TreeNode*> nodePair;  // 定义数对
+
+	if (leftNode != NULL && rightNode != NULL)
+		nodeStack.push(make_pair(leftNode, rightNode));
+	else if (leftNode == NULL && rightNode == NULL)
+		return 1;
+	else
+		return 0;  // 树的深度为2时
+	while (!nodeStack.empty())
+	{
+		// 出栈栈顶元素
+		nodePair = nodeStack.top();
+		nodeStack.pop();
+
+		leftNode = nodePair.first;
+		rightNode = nodePair.second;
+		if (leftNode->val == rightNode->val)  // 如果两个节点值相等，对两个非空节点的数对压栈
+		{
+			if (leftNode->left && rightNode->right)
+				nodeStack.push(make_pair(leftNode->left, rightNode->right));
+			else if (leftNode->left == NULL && rightNode->right != NULL || leftNode->left != NULL && rightNode->right == NULL)  // 一个空一个非空返回0
+				return 0;
+			if (leftNode->right && rightNode->left)
+				nodeStack.push(make_pair(leftNode->right, rightNode->left));
+			else if (leftNode->right == NULL && rightNode->left != NULL || leftNode->right != NULL && rightNode->left == NULL)
+				return 0;
+			
+		}
+		else
+			return 0;
+		
+	}
+	// 通过判断，返回true
+	return 1;
+	
+
+}
+// 递归实现
+// 测试信息
+// 执行用时 :4 ms, 在所有 C++ 提交中击败了93.05 %的用户
+// 内存消耗 :14.6 MB, 在所有 C++ 提交中击败了96.78 %的用户
+bool CBinaryTree::isSymmetric(TreeNode* root) {
+	if (root == NULL)
+		return 1;
+	TreeNode* currNode = root;
+	bool ans = isLeftEqualRight(currNode->left, currNode->right);  // 判断左节点值是否等于右节点值
+	return ans;
+}
+
+bool CBinaryTree::isLeftEqualRight(TreeNode* left, TreeNode* right) {
+
+	if (left == NULL && right == NULL)  // 递归结束条件，如果两个节点为空，返回1
+		return 1;
+	if (left != NULL && right != NULL)  // 其他情况，递归判断左节点的左节点是否等于右节点的右节点，并且左节点的右节点等于右节点的左节点值（镜像对称）
+		return left->val == right->val ? (isLeftEqualRight(left->left, right->right) && isLeftEqualRight(left->right, right->left)) : 0;
+	else  // 递归结束条件，如果一个节点为空，另一个节点不为空，返回0
+		return 0;
 }
