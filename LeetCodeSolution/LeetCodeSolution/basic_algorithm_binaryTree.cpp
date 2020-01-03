@@ -665,3 +665,31 @@ bool CBinaryTree::isLeftEqualRight(TreeNode* left, TreeNode* right) {
 	else  // 递归结束条件，如果一个节点为空，另一个节点不为空，返回0
 		return 0;
 }
+/*****************函数说明********************
+* 函数名：
+* 函数参数：
+* 函数返回值：
+* 问题描述：
+		给定一个二叉树和一个目标和，判断该树中是否存在根节点到叶子节点的路径，这条路径上所有节点值相加等于目标和。
+* 解决方案：
+	1、递归
+		递归结束条件：节点为空返回0；叶子节点值等于剩余值返回1.
+	2、迭代
+		暂未完成
+
+* 测试信息：
+	递归：16ms，63.64%
+		
+**/
+bool CBinaryTree::hasPathSum(TreeNode* root, int sum) {
+	int tempSum = sum;
+	TreeNode* currNode = root;
+	if (currNode == NULL)  // 递归结束条件，节点为空节点
+		return 0;
+	if (tempSum == currNode->val)  // 递归结束条件，节点值等于剩余值且该节点是叶子节点
+		if (!currNode->left && !currNode->right)
+			return 1;
+		
+	// 否则的话，左右两支开始递归
+	return (hasPathSum(currNode->left, sum - currNode->val) || hasPathSum(currNode->right, sum - currNode->val));
+}

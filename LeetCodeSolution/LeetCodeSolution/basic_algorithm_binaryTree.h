@@ -43,9 +43,12 @@ public:
 	int maxDepthIterationRefer(TreeNode* root);
 
 	// ¶Ô³ÆÊ÷µÄÅÐ¶Ï
-	bool isSymmetricIteration(TreeNode* root);
-	bool isSymmetric(TreeNode* root);
-	bool isLeftEqualRight(TreeNode* left, TreeNode* right);
+	bool isSymmetricIteration(TreeNode* root);  // µü´ú
+	bool isSymmetric(TreeNode* root);  // µÝ¹é
+	bool isLeftEqualRight(TreeNode* left, TreeNode* right);  // µÝ¹é¸¨Öúº¯Êý
+
+	// Â·¾¶×ÜºÍ
+	bool hasPathSum(TreeNode* root, int sum);  // µÝ¹é
 private:
 	std::vector<int> ans;
 	std::vector<std::vector<int>> levelAns;
