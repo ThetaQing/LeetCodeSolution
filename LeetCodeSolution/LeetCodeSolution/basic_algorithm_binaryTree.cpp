@@ -693,3 +693,43 @@ bool CBinaryTree::hasPathSum(TreeNode* root, int sum) {
 	// 否则的话，左右两支开始递归
 	return (hasPathSum(currNode->left, sum - currNode->val) || hasPathSum(currNode->right, sum - currNode->val));
 }
+
+TreeNode* CBinaryTree::buildTree(vector<int>& preorder, vector<int>& inorder) 
+{
+	if (preorder.empty())
+		return NULL;
+
+	
+
+}
+
+TreeNode* CBinaryTree::helper(TreeNode* root, vector<int> left, vector<int>right)
+{
+	// 递归结束条件，左右子树只有一个节点或者没有节点
+	if (left.size() == 0)
+		root->left = NULL;
+	else if (left.size() == 1)
+		root->left = new TreeNode (left[0]);
+
+	if (right.size() == 0)
+		root->right = NULL;
+	else if (right.size() == 1)
+		root->right = new TreeNode(right[0]);
+	else
+	{
+	// 根节点
+		ansTree->val = left[0];
+		int i;  // 找到根节点的索引
+		for (i = 0; i < right.size(); ++i)
+		{
+			if (left[0] == right[i])
+				break;
+		}
+		vector<int> newLeft, newRight;
+		copy(right.begin(), right.begin() + i - 1, newLeft);
+		copy(right.begin() + i + 1, right.end(), newRight);
+		return helper(new TreeNode(newLeft[0]), newLeft, newRight);
+	}
+
+	
+}

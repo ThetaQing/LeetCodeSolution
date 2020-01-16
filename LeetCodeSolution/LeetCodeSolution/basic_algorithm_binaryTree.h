@@ -49,10 +49,16 @@ public:
 
 	// 路径总和
 	bool hasPathSum(TreeNode* root, int sum);  // 递归
+
+	// 由遍历结果重建树
+	TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder);  // 前序和中序
+	TreeNode* helper(TreeNode* root, vector<int> left, vector<int>right);
 private:
 	std::vector<int> ans;
 	std::vector<std::vector<int>> levelAns;
 	int maxdepth=0;
+	TreeNode myNode{1};
+	TreeNode* ansTree = &myNode;
 	
 };
 #endif // !__basic_algorithm_binaryTree_

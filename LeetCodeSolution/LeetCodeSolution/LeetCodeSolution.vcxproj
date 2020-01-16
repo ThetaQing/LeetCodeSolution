@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="basic_algorithm_array.cpp" />
+    <ClCompile Include="basic_algorithm_binarySearchTree.cpp" />
     <ClCompile Include="basic_algorithm_binaryTree.cpp" />
     <ClCompile Include="basic_algorithm_linkedList.cpp" />
     <ClCompile Include="basic_algorithm_sortFind.cpp" />
@@ -133,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basic_algorithm_array.h" />
+    <ClInclude Include="basic_algorithm_binarySearchTree.h" />
     <ClInclude Include="basic_algorithm_binaryTree.h" />
     <ClInclude Include="basic_algorithm_linkedList.h" />
     <ClInclude Include="basic_algorithm_string.h" />

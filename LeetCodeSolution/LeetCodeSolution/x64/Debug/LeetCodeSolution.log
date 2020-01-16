@@ -1,3 +1,3 @@
 ﻿  basic_algorithm_binaryTree.cpp
-F:\Code\VC++\LeetCode\LeetCodeSolution\LeetCodeSolution\LeetCodeSolution\LeetCodeSolution\basic_algorithm_binaryTree.cpp(135): warning C4715: “CBinaryTree::preorderTraversal2”: 不是所有的控件路径都返回值
+F:\Code\VC++\LeetCode\LeetCodeSolution\LeetCodeSolution\LeetCodeSolution\LeetCodeSolution\basic_algorithm_binaryTree.cpp(154): warning C4715: “CBinaryTree::preorderTraversal2”: 不是所有的控件路径都返回值
   LeetCodeSolution.vcxproj -> F:\Code\VC++\LeetCode\LeetCodeSolution\LeetCodeSolution\LeetCodeSolution\x64\Debug\LeetCodeSolution.exe

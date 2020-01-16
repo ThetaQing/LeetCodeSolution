@@ -36,6 +36,9 @@
     <ClCompile Include="basic_algorithm_binaryTree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="basic_algorithm_binarySearchTree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="solution.h">
@@ -51,6 +54,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="basic_algorithm_binaryTree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="basic_algorithm_binarySearchTree.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

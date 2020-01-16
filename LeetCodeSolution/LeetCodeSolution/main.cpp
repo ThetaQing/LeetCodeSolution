@@ -45,13 +45,16 @@ int int2bit(int n)
 
 int main()
 {
-	TreeNode root(1), Node2(2), Node3(3);
-	vector<int> result;
-	root.left = NULL;
-	root.right = &Node2;
-	Node2.left = &Node3;
+	TreeNode root(1), Node2(2), Node3(3), Node4(4), Node5(5), Node6(6), Node7(7);
+	int result;	
+	root.left = &Node2;
+	root.right = &Node3;
+	Node2.left = &Node4;
+	Node2.right = &Node5;
+	Node3.left = &Node6;
+	Node3.right = &Node7;
 	CBinaryTree myTree;
-	result = myTree.postorderTraversal(&root);
+	result = myTree.maxDepthIteration(&root);
 	std::system("pause");
 	return 0;
 }

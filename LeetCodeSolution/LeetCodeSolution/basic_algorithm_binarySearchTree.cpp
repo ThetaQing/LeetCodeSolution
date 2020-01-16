@@ -59,3 +59,28 @@ bool CBinarySearch::isValidBST(TreeNode* root)
 
 }
 
+/********************函数说明******************
+* 函数名：BSTIterator(TreeNode* root)
+* 函数参数：
+* 函数返回值：
+* 问题描述：
+实现一个二叉搜索树迭代器。你将使用二叉搜索树的根节点初始化迭代器。
+调用 next() 将返回二叉搜索树中的下一个最小的数。
+**/
+
+class BSTIterator {
+public:
+	BSTIterator(TreeNode* root) {
+
+	}
+
+	/** @return the next smallest number */
+	int next() {
+
+	}
+
+	/** @return whether we have a next smallest number */
+	bool hasNext() {
+		
+	}
+};
